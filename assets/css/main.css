@@ -224,24 +224,24 @@ section p:last-child{
         width:85%
     }
 }
-.teaching{
+.coursework{
     background-color:#fff
 }
-.teaching__course{
+.coursework__course{
     margin-bottom:20px
 }
-.teaching__course:last-of-type{
+.coursework__course:last-of-type{
     margin-bottom:0
 }
-.teaching__course-title{
+.coursework__course-title{
     font-weight:bold;
     font-size:1.2rem
 }
-.teaching__course-period{
+.coursework__course-period{
     margin-bottom:5px;
     font-style:italic
 }
-.teaching__course-link--inactive::after{
+.coursework__course-link--inactive::after{
     content:" (to be ported)";
     font-style:italic
 }
@@ -337,7 +337,7 @@ section p:last-child{
     }
 }
 .header__intro{
-    margin-bottom:25px
+    margin-bottom:30px
 }
 .header__title{
     margin:0 auto;
