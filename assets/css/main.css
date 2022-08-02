@@ -302,7 +302,7 @@ section p:last-child{
 }
 @media(min-width: 640px){
     .resume__item-description,.resume__item-summary{
-        margin-bottom:60px
+        margin-bottom:20px
     }
     .resume__item-description:last-of-type,.resume__item-summary:last-of-type{
         margin-bottom:0
