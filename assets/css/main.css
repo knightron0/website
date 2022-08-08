@@ -325,6 +325,7 @@ section p:last-child{
 @media(min-width: 500px){
     .header{
         padding:60px;
+        padding-bottom:30px;
         flex-direction:row;
         justify-content:space-between;
         text-align:left;
