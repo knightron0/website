@@ -1,3 +1,8 @@
 .sass-cache/
 fonts/*
 .DS_Store
+
+node_modules/
+.env
+.next/
+next-env.d.ts

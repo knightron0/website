@@ -116,7 +116,7 @@ body{
     color:#052d3f;
     overflow-x:hidden
 }
-a{
+/* a{
     text-decoration:none;
     color:#000;
     background:rgba(245,215,110,.5);
@@ -131,7 +131,7 @@ a.no-highlight{
 }
 a.no-highlight:hover{
     color:#0c6f9d
-}
+} */
 .container{
     max-width:860px;
     margin:0 auto;
