@@ -4,6 +4,7 @@ import faceImage from 'public/face.jpeg'
 import Head from "next/head";
 import Link from "next/link";
 import { Source_Sans_Pro, Inter } from 'next/font/google'
+import localFont from 'next/font/local'
 
 import { api } from "~/utils/api";
 const SourceSansPro = Source_Sans_Pro({
@@ -16,6 +17,10 @@ const inter = Inter({
   weight: "600"
 })
 
+const ColfaxWebRegular = localFont({ src: 'ColfaxWebRegular.woff' })
+const ColfaxWebMedium = localFont({ src: 'ColfaxWebMedium.woff' })
+
+
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
@@ -27,13 +32,12 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-black">
-        <Flex direction="column" width="70%" className={SourceSansPro.className}>
+        <Flex direction="column" width="70%" className={ColfaxWebRegular.className}>
           <Box textColor="white">
             <Flex direction="row" alignItems="center" gap={3}>
-              <Image src={"/face.jpeg"} boxSize='40px'></Image>
-              <Text fontSize='1xl' align="center" className={inter.className} fontWeight="bold">Sarthak Mangla</Text>
+              <Text fontSize='3xl' align="center" className={ColfaxWebRegular.className} fontWeight="bold">Sarthak Mangla</Text>
             </Flex>
-            I'm currently studying Computer Science at Purdue.
+            Hey -- I'm Sarthak, 
           </Box>
           <Divider />
           <Box textColor="white">
