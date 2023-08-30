@@ -35,9 +35,10 @@ const Home: NextPage = () => {
         <Flex direction="column" width="70%" className={ColfaxWebRegular.className}>
           <Box textColor="black">
             <Flex direction="row" alignItems="center" gap={3}>
-              <Text fontSize='3xl' align="center" fontWeight="bold" className="pb-5">Sarthak Mangla</Text>
+              <Text fontSize='3xl' align="center" fontWeight="bold" className={inter.className} paddingBottom={5}>Sarthak Mangla</Text>
             </Flex>
-            I study Computer Science (and some Math) at Purdue University. I spend most of my time working  
+            I study Computer Science (and some Math) at <Link href="https://www.cs.purdue.edu/" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-yellow-200 select-none cursor-pointer transition-all duration-500 ease-out">Purdue University</Link>. 
+            I'm currently researching applications of artificial intelligence in healthcare at Purdue's Heinz Lab and CVIRL Labs.
             <br></br>
             <br></br>
             When I'm not 
