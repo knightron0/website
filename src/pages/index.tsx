@@ -1,16 +1,11 @@
-import { Flex, Box, Divider, Text, Image } from "@chakra-ui/react";
+import { Flex, Box, Text } from "@chakra-ui/react";
 import { type NextPage } from "next";
-import faceImage from 'public/face.jpeg'
 import Head from "next/head";
 import Link from "next/link";
-import { Source_Sans_Pro, Inter } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import localFont from 'next/font/local'
 
-import { api } from "~/utils/api";
-const SourceSansPro = Source_Sans_Pro({
-  subsets: ['latin'],
-  weight: "400"
-})
+// import { api } from "~/utils/api";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -18,11 +13,11 @@ const inter = Inter({
 })
 
 const ColfaxWebRegular = localFont({ src: 'ColfaxWebRegular.woff' })
-const ColfaxWebMedium = localFont({ src: 'ColfaxWebMedium.woff' })
+// const ColfaxWebMedium = localFont({ src: 'ColfaxWebMedium.woff' })
 
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  // const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
   return (
     <>
@@ -38,7 +33,7 @@ const Home: NextPage = () => {
               <Text fontSize='2xl' align="center" fontWeight="bold" className={inter.className} paddingBottom={5} userSelect="none">Sarthak Mangla</Text>
             </Flex>
             I study Computer Science (and some Math) at <Link href="https://www.cs.purdue.edu/" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">Purdue University</Link>. 
-            Currently, I'm researching 
+            Currently, I&apos;m researching 
             <br></br>
             <br></br>
             Outside of all this, I love a good pesto dish, roadtrips, and watching <Link href="https://letterboxd.com/sarthakm/" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">movies</Link>. I also sometimes try to make <Link href="https://www.misbalanced.link/" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">generative sketches</Link>. 
@@ -46,7 +41,7 @@ const Home: NextPage = () => {
             <br></br>
           </Box>
           <Box className="py-10 text-gray-500">
-            Here's my <Link href="https://github.com/knightron0" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">GitHub</Link>, <Link href="https://twitter.com/msarthak29" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">Twitter</Link>, and  <Link href="mailto:mangla@purdue.edu" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">Email</Link>.
+            Here&apos;s my <Link href="https://github.com/knightron0" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">GitHub</Link>, <Link href="https://twitter.com/msarthak29" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">Twitter</Link>, and  <Link href="mailto:mangla@purdue.edu" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">Email</Link>.
           </Box>
         </Flex>
       </main>
