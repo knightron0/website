@@ -33,11 +33,12 @@ const Home: NextPage = () => {
               <Text fontSize='2xl' align="center" fontWeight="bold" className={inter.className} paddingBottom={5} userSelect="none">Sarthak Mangla</Text>
             </Flex>
             I study Computer Science (and some Math) at <Link href="https://www.cs.purdue.edu/" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">Purdue University</Link>. 
-            Currently, I&apos;m researching 
+            Currently, I&apos;m trying to build an individualized <Link href="https://computationalaudiology.com/indivhear-an-individualized-adaptive-deep-learning-based-hearing-aid/" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">hearing aid</Link> powered by deep learning at Purdue&apos;s <Link href="https://engineering.purdue.edu/HeinzLab/people" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">Heinz Lab</Link>. 
+            I&apos;m also developing foundational models for cardiac magnetic resonance (CMR) understanding at the <Link href="https://engineering.purdue.edu/cvirl" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">CVIRL lab</Link>.
+            Recently, a few friends and I have been playing around with LLMs and their possible applications in the group travel space, check us out <Link href="https://www.roamer.dev/" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">here</Link>! 
             <br></br>
             <br></br>
             Outside of all this, I love a good pesto dish, roadtrips, and watching <Link href="https://letterboxd.com/sarthakm/" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">movies</Link>. I also sometimes try to make <Link href="https://www.misbalanced.link/" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-200 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">generative sketches</Link>. 
-            <br></br>
             <br></br>
           </Box>
           <Box className="py-10 text-gray-500">
