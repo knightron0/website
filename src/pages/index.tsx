@@ -35,7 +35,7 @@ const Home: NextPage = () => {
         <div className="absolute bottom-[-5%] right-[-10%] md:top-1/2 md:left-1/2 w-3/5 aspect-square rounded-full bg-[#D1E8E2] opacity-50 animate-big overflow-hidden select-none" />
         <div className="absolute bottom-[20%] right-[-10%] md:top-[15%] md:right-[-10%] w-1/3 aspect-square rounded-full bg-[#A9D6E5] opacity-50 animate-small overflow-hidden select-none" style={{ clipPath: "circle(50% at 50% 50%)" }} />
         <div className="absolute bottom-[-10%] left-[-20%] md:bottom-[-30%] md:left-[-25%] w-1/2 aspect-square rounded-full bg-[#19747E] opacity-50 animate-medium overflow-hidden select-none" style={{ clipPath: "circle(50% at 50% 50%)" }} />
-        <div className="ml-16 md:ml-24 mt-32 md:mt-16 w-2/3 flex flex-col text-sm md:text-base" style={{ fontFamily: inter.style.fontFamily }}>
+        <div className="ml-16 md:ml-24 mt-16 w-2/3 flex flex-col text-sm md:text-base" style={{ fontFamily: inter.style.fontFamily }}>
           <div className="text-2xl md:text-3xl font-semibold pb-5" style={{ fontFamily: cormorantGaramond.style.fontFamily }}>Sarthak Mangla</div>
           <p>I study Computer Science (and some Math) at <Link href="https://www.cs.purdue.edu/" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-100 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">Purdue University</Link>. This summer, I&apos;m interning at <Link href="https://bubble.io/" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-100 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">Bubble</Link> working on AI research & development.</p>
           <br />
