@@ -17,8 +17,6 @@ const cormorantGaramond = Cormorant_Garamond({
   weight: "400"
 })
 
-const ColfaxWebRegular = localFont({ src: 'ColfaxWebRegular.woff' })
-
 
 const Home: NextPage = () => {
 
