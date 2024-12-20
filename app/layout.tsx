@@ -18,6 +18,9 @@ export const metadata: Metadata = {
     default: 'Sarthak Mangla',
     template: '%s | Sarthak Mangla',
   },
+  icons: {
+    icon: 'icon.png',
+  },
   description: "",
   openGraph: {
     title: 'Sarthak Mangla',
