@@ -488,12 +488,3 @@ section p:last-child{
         margin-right:20px
     }
 }
-.dark{
-    background-color:#202631;
-    color:#fff
-}
-.dark a{
-    color:#fff;
-    background-color:transparent
-}
-
