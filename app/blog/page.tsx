@@ -1,14 +1,19 @@
 import { BlogPosts } from 'app/components/posts'
+import { Cormorant_Garamond } from 'next/font/google'
 
 export const metadata = {
   title: 'Blog',
-  description: 'Read my blog.',
 }
+
+const cormorantGaramond = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: "400"
+})
 
 export default function Page() {
   return (
     <section>
-      <h1 className="font-semibold text-2xl mb-8 tracking-tighter">Posts</h1>
+      <h1 className="text-2xl md:text-3xl font-semibold mb-8" style={{ fontFamily: cormorantGaramond.style.fontFamily }}>Posts</h1>
       <BlogPosts />
     </section>
   )

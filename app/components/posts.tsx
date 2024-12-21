@@ -5,7 +5,7 @@ export function BlogPosts() {
   let allBlogs = getBlogPosts()
 
   return (
-    <div className='mb-10'>
+    <div className='mb-10' id='posts'>
       {allBlogs
         .sort((a, b) => {
           if (

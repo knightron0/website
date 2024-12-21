@@ -3,6 +3,12 @@ import { CustomMDX } from 'app/components/mdx'
 import { formatDate, getBlogPosts } from 'app/blog/utils'
 import { baseUrl } from 'app/sitemap'
 import Footer from 'app/components/footer'
+import { Cormorant_Garamond } from 'next/font/google'
+
+const cormorantGaramond = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: "400"
+})
 
 export async function generateStaticParams() {
   let posts = getBlogPosts()
@@ -84,7 +90,7 @@ export default function Blog({ params }) {
             }),
           }}
         />
-        <h1 className="title font-semibold text-2xl tracking-tighter">
+        <h1 className="text-2xl md:text-3xl font-semibold" style={{ fontFamily: cormorantGaramond.style.fontFamily }}>
           {post.metadata.title}
         </h1>
         <div className="flex justify-between items-center mt-2 mb-8 text-sm">

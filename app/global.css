@@ -148,3 +148,10 @@ table {
 .title {
   text-wrap: balance;
 }
+a:not(#nav a):not(#posts a) {
+  @apply underline decoration-dashed underline-offset-2 decoration-1.5 cursor-pointer transition-all duration-500 ease-out;
+}
+
+a:not(#nav a):not(#posts a):hover {
+  @apply bg-green-100;
+}

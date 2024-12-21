@@ -21,7 +21,7 @@ export default function Footer() {
   return (
     <footer className="mb-16">
       <p className="text-gray-500">
-        <Link href="https://github.com/knightron0" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-100 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">GitHub</Link>, <Link href="https://twitter.com/msarthak29" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-100 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">Twitter</Link>, <Link href="mailto:mangla@purdue.edu" className="underline decoration-dashed underline-offset-4 decoration-1 hover:bg-green-100 hover:bg-opacity-60 cursor-pointer transition-all duration-500 ease-out">Email</Link>
+        <Link href="https://github.com/knightron0">GitHub</Link>, <Link href="https://twitter.com/msarthak29">Twitter</Link>, <Link href="mailto:mangla@purdue.edu">Email</Link>
       </p>
     </footer>
   )
