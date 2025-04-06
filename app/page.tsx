@@ -12,9 +12,11 @@ export default function Page() {
     <>
       <section className='mb-10'>
         <div className="text-2xl md:text-3xl font-semibold pb-5" style={{ fontFamily: cormorantGaramond.style.fontFamily }}>Sarthak Mangla</div>
-        <p>I study Computer Science (and some Math) at <Link href="https://www.cs.purdue.edu/">Purdue University</Link>. </p>
+        <p>I study Computer Science (and some Math) at <Link href="https://www.cs.purdue.edu/">Purdue University</Link>.</p>
         <br />
-        <p>I&apos;m working on an individualized deep-learning based <Link href="https://computationalaudiology.com/indivhear-an-individualized-adaptive-deep-learning-based-hearing-aid/">hearing aid</Link> at <Link href="https://engineering.purdue.edu/HeinzLab/people">Heinz Lab</Link> + developing foundational models for cardiac magnetic resonance (CMR) understanding at the <Link href="https://engineering.purdue.edu/cvirl">CVIRL lab</Link>. </p>
+        <p>My latest obsession is ML systems. A manifestation of that is <Link href="https://tensara.org">Tensara</Link>. Feel free to <Link href="https://github.com/tensara/tensara">leave a few PRs</Link> too while you're trying it out!</p>
+        <br />
+        <p>Otherwise, I&apos;m working on an individualized deep-learning based <Link href="https://computationalaudiology.com/indivhear-an-individualized-adaptive-deep-learning-based-hearing-aid/">hearing aid</Link> at <Link href="https://engineering.purdue.edu/HeinzLab/people">Heinz Lab</Link> + developing foundational models for cardiac magnetic resonance (CMR) understanding at the <Link href="https://engineering.purdue.edu/cvirl">CVIRL lab</Link>. </p>
         <br />
         <p>Last summer, I helped build AI systems to <Link href="https://bubble.io/blog/bubblecon-2024-bubble-assist-ai/">generate full-stack MVPs</Link> on <Link href="https://bubble.io/" >Bubble</Link>&apos;s visual DSL.</p>
         <br />
