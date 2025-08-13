@@ -14,6 +14,8 @@ export default function Page() {
         <div className="text-2xl md:text-3xl font-semibold pb-5" style={{ fontFamily: cormorantGaramond.style.fontFamily }}>Sarthak Mangla</div>
         <p>I study Computer Science (and some Math) at <Link href="https://www.cs.purdue.edu/">Purdue University</Link>.</p>
         <br />
+        <p>I currently (try not to) break things at <Link href="https://cartesia.ai">Cartesia AI</Link>.</p>
+        <br />
         <p>My latest obsession is ML systems. A manifestation of that is <Link href="https://tensara.org">Tensara</Link>. Feel free to <Link href="https://github.com/tensara/tensara">leave a few PRs</Link> too while you're trying it out!</p>
         <br />
         <p>Otherwise, I&apos;m working on an individualized deep-learning based <Link href="https://computationalaudiology.com/indivhear-an-individualized-adaptive-deep-learning-based-hearing-aid/">hearing aid</Link> at <Link href="https://engineering.purdue.edu/HeinzLab/people">Heinz Lab</Link> + developing foundational models for cardiac magnetic resonance (CMR) understanding at the <Link href="https://engineering.purdue.edu/cvirl">CVIRL lab</Link>. </p>
