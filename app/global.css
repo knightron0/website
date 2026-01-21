@@ -65,7 +65,11 @@ html {
 }
 
 .prose code {
-  @apply px-1 py-0.5 rounded-lg;
+  @apply px-1 py-0.5 rounded-md;
+  background-color: #e0e0e0;
+  vertical-align: baseline;
+  line-height: 1.2;
+  font-size: 0.9em;
 }
 
 .prose pre code {
@@ -85,6 +89,14 @@ html {
 
 .prose p {
   @apply my-4 text-neutral-800;
+}
+
+.prose hr {
+  @apply border-neutral-200 my-6;
+  border-top-width: 1px;
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
 }
 
 .prose h1 {
@@ -154,4 +166,25 @@ a:not(#nav a):not(#posts a) {
 
 a:not(#nav a):not(#posts a):hover {
   @apply bg-green-100;
+}
+
+/* Center display math blocks ($$ $$) */
+/* Target the katex-display element directly and center it */
+.prose .katex-display {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-top: 1em !important;
+  margin-bottom: 1em !important;
+  width: fit-content !important;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Center parent paragraphs that contain display math */
+.prose .math-display,
+.prose p.math-display {
+  text-align: center !important;
+  width: 100% !important;
 }
