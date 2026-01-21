@@ -15,31 +15,25 @@ export async function GET(
 
     const { title, summary, publishedAt } = post.metadata
 
-    // Load Cormorant Garamond font from Google Fonts with multiple weights
-    const fonts: Array<{ name: string; data: ArrayBuffer; style: 'normal' | 'italic'; weight: 400 | 600 | 700 | 800 }> = []
+    // Load Cormorant Garamond fonts from Google Fonts
+    const fonts: Array<{ name: string; data: ArrayBuffer; style: string; weight: number }> = []
     try {
-      // Fetch the CSS from Google Fonts API to get the font file URLs
+      // Fetch the CSS from Google Fonts API
       const cssResponse = await fetch(
-        'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700;800&display=swap'
+        'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap'
       )
       const cssText = await cssResponse.text()
       
-      // Parse all @font-face blocks to extract weight and URL for each
-      const fontFaceRegex = /@font-face\s*\{([^}]+)\}/g
+      // Extract all font-face blocks and their URLs
+      // Google Fonts CSS has separate @font-face blocks for each weight
+      const fontFaceRegex = /@font-face\s*\{[^}]*font-weight:\s*(\d+)[^}]*url\(([^)]+)\)[^}]*\}/g
       let match
       
       while ((match = fontFaceRegex.exec(cssText)) !== null) {
-        const fontFaceContent = match[1]
+        const weight = parseInt(match[1], 10) as 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900
+        const fontUrl = match[2].replace(/['"]/g, '')
         
-        // Extract font weight (e.g., font-weight: 400; or font-weight:400;)
-        const weightMatch = fontFaceContent.match(/font-weight\s*:\s*(\d+)/i)
-        const weightValue = weightMatch ? parseInt(weightMatch[1], 10) : 400
-        const weight = weightValue as 400 | 600 | 700 | 800
-        
-        // Extract font URL
-        const urlMatch = fontFaceContent.match(/url\(([^)]+)\)/)?.[1]
-        if (urlMatch) {
-          const fontUrl = urlMatch.replace(/['"]/g, '')
+        try {
           const fontResponse = await fetch(fontUrl)
           if (fontResponse.ok) {
             const fontData = await fontResponse.arrayBuffer()
@@ -50,10 +44,32 @@ export async function GET(
               weight: weight,
             })
           }
+        } catch (error) {
+          console.error(`Failed to load font weight ${weight}:`, error)
         }
       }
     } catch (error) {
-      console.error('Failed to load font:', error)
+      console.error('Failed to load fonts:', error)
+    }
+
+    // Load og-design.svg image
+    let ogDesignImage: string | null = null
+    try {
+      const url = new URL(request.url)
+      const baseUrl = `${url.protocol}//${url.host}`
+      const imageUrl = `${baseUrl}/og-design.svg`
+      const imageResponse = await fetch(imageUrl)
+      if (imageResponse.ok) {
+        const imageBuffer = await imageResponse.arrayBuffer()
+        // Convert ArrayBuffer to base64
+        const bytes = new Uint8Array(imageBuffer)
+        const binary = bytes.reduce((acc, byte) => acc + String.fromCharCode(byte), '')
+        const imageBase64 = btoa(binary)
+        const imageType = imageResponse.headers.get('content-type') || 'image/svg+xml'
+        ogDesignImage = `data:${imageType};base64,${imageBase64}`
+      }
+    } catch (error) {
+      console.error('Failed to load og-design image:', error)
     }
 
     return new ImageResponse(
@@ -64,55 +80,42 @@ export async function GET(
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'flex-start',
+            alignItems: 'center',
             justifyContent: 'center',
+            gap: '20px',
             backgroundColor: '#FCF6F1',
-            padding: '80px',
+            padding: '80px 80px 318px 80px',
             fontFamily: 'system-ui, -apple-system, sans-serif',
+            position: 'relative',
           }}
         >
           {/* Title */}
           <div
             style={{
               fontSize: 72,
-              fontWeight: 600,
+              fontWeight: 700,
               lineHeight: 1.1,
               color: '#1a1a1a',
-              marginBottom: summary ? '40px' : '0',
               maxWidth: '1040px',
               letterSpacing: '-0.01em',
               display: 'flex',
               flexWrap: 'wrap',
               fontFamily: 'Cormorant Garamond',
+              textAlign: 'center',
+              justifyContent: 'center',
+              textTransform: 'lowercase',
+              width: '100%',
             }}
           >
             {title}
           </div>
-
-          {/* Summary */}
-          {summary && (
-            <div
-              style={{
-                fontSize: 32,
-                lineHeight: 1.6,
-                color: '#555',
-                maxWidth: '1000px',
-                marginBottom: 'auto',
-                fontWeight: 400,
-                fontFamily: 'system-ui, -apple-system, sans-serif',
-              }}
-            >
-              {summary.length > 150 ? `${summary.substring(0, 150)}...` : summary}
-            </div>
-          )}
-
           {/* Footer with date and author */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '20px',
-              marginTop: 'auto',
+              marginBottom: '20px',
               fontSize: 24,
               color: '#888',
               fontWeight: 400,
@@ -131,12 +134,38 @@ export async function GET(
             {publishedAt && <div style={{ color: '#ddd' }}>•</div>}
             <div>Sarthak Mangla</div>
           </div>
+
+          {/* OG Design Image at bottom */}
+          {ogDesignImage && (
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                width: '1200px',
+                height: '238px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <img
+                src={ogDesignImage}
+                alt=""
+                style={{
+                  width: '1200px',
+                  height: '238px',
+                  objectFit: 'cover',
+                }}
+              />
+            </div>
+          )}
         </div>
       ),
       {
         width: 1200,
         height: 630,
-        fonts: fonts,
+        fonts: fonts as any,
       }
     )
   } catch (e: any) {
