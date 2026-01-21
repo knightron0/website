@@ -20,11 +20,11 @@ $$
 |y_i - w_i| \le a + r \, |y_i|
 $$
 
-where $a$ is `atol` (absolute tolerance) and $r$ is `rtol` (relative tolerance). The core problem is that we have to _pick_ these bounds -- and if done by hand, they can feel arbitrary. This post is about choosing $a$ and $r$ in a way that’s (1) justifiable and (2) stable.
+where $a$ is `atol` (absolute tolerance) and $r$ is `rtol` (relative tolerance). The core problem is that we have to _pick_ these bounds -- and if done by hand, they can feel arbitrary. This post is about choosing $a$ and $r$ in a way that's (1) justifiable and (2) stable.
 
 ![difference distribution](/difference.png)
 
-Even among wrong submissions, the errors are often tiny: maximum differences frequently fall in the range $[10^{-5}, 10^{-3}]$, while mean differences reach down to $10^{-9}$, with many below $10^{-4}$. 
+This is a distribution of the mean and max absolute differences across wrong submissions (filtered to those with mean/max difference < 1). Even among wrong submissions, the errors are often tiny: maximum differences frequently fall in the range $[10^{-5}, 10^{-3}]$, while mean differences reach down to $10^{-9}$, with many below $10^{-4}$. 
 
 _Why_ should a submission that’s $10^{-6}$ away be rejected? _Why_ should it be accepted?
 
