@@ -92,7 +92,12 @@ html {
 }
 
 .prose blockquote {
-  @apply border-l-4 border-neutral-300 pl-4 my-4 text-neutral-600;
+  @apply border-l-4 border-neutral-300 pl-4 my-4;
+  color: #737373;
+}
+
+.prose blockquote p {
+  color: #737373;
 }
 
 
