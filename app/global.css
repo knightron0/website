@@ -87,6 +87,12 @@ html {
   @apply m-0;
 }
 
+.prose video {
+  filter: brightness(0.85);
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+}
+
 .prose p {
   @apply my-4 text-neutral-800;
 }
