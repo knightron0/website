@@ -97,6 +97,10 @@ html {
   @apply my-4 text-neutral-800;
 }
 
+.prose li {
+  @apply text-neutral-800;
+}
+
 .prose blockquote {
   @apply border-l-4 border-neutral-300 pl-4 my-4;
   color: #737373;
@@ -141,6 +145,15 @@ html {
 
 .prose ol {
   @apply list-decimal pl-6;
+}
+
+.prose sup a {
+  @apply no-underline text-neutral-600;
+}
+
+.prose hr + ol {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
 }
 
 .prose > :first-child {

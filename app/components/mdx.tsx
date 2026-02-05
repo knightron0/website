@@ -103,10 +103,117 @@ let components = {
   Table,
 }
 
+function normalizeFootnoteId(label: string) {
+  return label
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]/g, '')
+}
+
+function preprocessFootnotes(source: string) {
+  let lines = source.split('\n')
+  let footnotes = new Map<string, string>()
+  let cleanedLines: string[] = []
+  let inFence = false
+
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i]
+    let fenceMatch = line.match(/^(```+|~~~+)/)
+    if (fenceMatch) {
+      inFence = !inFence
+      cleanedLines.push(line)
+      continue
+    }
+
+    if (!inFence) {
+      let defMatch = line.match(/^\[\^([^\]]+)\]:\s*(.*)$/)
+      if (defMatch) {
+        let label = defMatch[1].trim()
+        let contentLines = [defMatch[2]]
+
+        while (i + 1 < lines.length) {
+          let next = lines[i + 1]
+          if (next.trim() === '') {
+            contentLines.push('')
+            i++
+            continue
+          }
+          if (/^( {2,}|\t+)/.test(next)) {
+            contentLines.push(next.replace(/^( {2,}|\t+)/, ''))
+            i++
+            continue
+          }
+          break
+        }
+
+        footnotes.set(label, contentLines.join('\n').trim())
+        continue
+      }
+    }
+
+    cleanedLines.push(line)
+  }
+
+  if (footnotes.size === 0) {
+    return source
+  }
+
+  let order: string[] = []
+  let refCounts = new Map<string, number>()
+  let inReplacementFence = false
+  let replacedBody = cleanedLines
+    .map((line) => {
+      let fenceMatch = line.match(/^(```+|~~~+)/)
+      if (fenceMatch) {
+        inReplacementFence = !inReplacementFence
+        return line
+      }
+      if (inReplacementFence) {
+        return line
+      }
+      return line.replace(/\[\^([^\]]+)\]/g, (match, rawLabel) => {
+        let label = rawLabel.trim()
+        if (!footnotes.has(label)) {
+          return match
+        }
+        if (!order.includes(label)) {
+          order.push(label)
+        }
+        let number = order.indexOf(label) + 1
+        let count = (refCounts.get(label) || 0) + 1
+        refCounts.set(label, count)
+        let safeId = normalizeFootnoteId(label) || `footnote-${number}`
+        let refId = count === 1 ? `fnref-${safeId}` : `fnref-${safeId}-${count}`
+        return `<sup id="${refId}"><a href="#fn-${safeId}">${number}</a></sup>`
+      })
+    })
+    .join('\n')
+
+  if (order.length === 0) {
+    return replacedBody
+  }
+
+  let list = order
+    .map((label, idx) => {
+      let safeId = normalizeFootnoteId(label) || `footnote-${idx + 1}`
+      let body = footnotes.get(label) || ''
+      let backTarget = `fnref-${safeId}`
+      return `${idx + 1}. <span id="fn-${safeId}"></span>${body} <a href="#${backTarget}" aria-label="Back to content">↩</a>`
+    })
+    .join('\n')
+
+  return `${replacedBody}\n\n---\n\n${list}\n`
+}
+
 export function CustomMDX(props) {
+  const sourceWithFootnotes = preprocessFootnotes(props.source)
+
   return (
     <MDXRemote
       {...props}
+      source={sourceWithFootnotes}
       components={{ ...components, ...(props.components || {}) }}
       options={{
         mdxOptions: {

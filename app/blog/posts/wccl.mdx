@@ -12,7 +12,7 @@ We initially considered familiar channels such as Slack, IRC, Zoom, or Discord. 
 
 More concretely, we would set up a bunch of laptops so that every webcam could see every screen. Each laptop would display the data it wanted to send, and all the others would read it through their webcams, decode it, and use it to exchange training updates for distributed training (i.e., no WiFi, no Bluetooth, no wires).
 
-Naturally, we trivialized all aspects of this from the start, as we expected our communication method to be finicky. The smallest “real” distributed setup we could get away with was data parallelism on just two laptops via a synchronous parameter server (somewhat). We picked the [MNIST dataset](https://en.wikipedia.org/wiki/MNIST_database) to train a small CNN on.
+Naturally, we trivialized all aspects of this from the start, as we expected our communication method to be finicky. The smallest “real” distributed setup we could get away with was data parallelism on just two laptops via a synchronous parameter server[^note]. We picked the [MNIST dataset](https://en.wikipedia.org/wiki/MNIST_database) to train a small CNN on.
 
 <center class="w-full">
     <img src="/flow.png" alt="flow" class="w-3/4" />
@@ -138,4 +138,7 @@ We also hooked the model up to an eval pipeline and a webpage, so we could watch
 
 All things considered, this was one of the most fun hackathon projects I’ve done. If you’re choosing what to build, I’d genuinely recommend this vibe.
 
-We’re open to acquisition offers for this breakthrough webcam-based distributed training platform. I’m slightly lazy to make a polished demo video that walks through the full training run end-to-end, but if you’re interested, the messy repo is [here](https://github.com/smchase/low-margins)!
+We’re open to acquisition offers for this breakthrough webcam-based distributed training platform. I’m slightly lazy to make a polished demo video that walks through the full training run end-to-end[^note2], but if you’re interested, the messy repo is [here](https://github.com/smchase/low-margins)!
+
+[^note]: Our setup differs from a traditional parameter servers. One machine served both as the server and worker, while the other just as a worker. Additionally, we are communicating averaged gradients to each machine for local updates, rather than centralizing updates on the server and communicating those updated parameters (a decision made on no sleep).
+[^note2]: There's a video demo on our [submission](https://devpost.com/software/wccl) which might shed more light on this.
