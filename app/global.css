@@ -201,14 +201,12 @@ a:not(#nav a):not(#posts a):hover {
 /* Target the katex-display element directly and center it */
 .prose .katex-display {
   display: block !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
+  text-align: center !important;
   margin-top: 1em !important;
   margin-bottom: 1em !important;
-  width: fit-content !important;
+  width: 100% !important;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible !important;
 }
 
 /* Center parent paragraphs that contain display math */
