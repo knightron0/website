@@ -189,12 +189,17 @@ table {
 .title {
   text-wrap: balance;
 }
-a:not(#nav a):not(#posts a) {
+a:not(#nav a):not(#posts a):not(.author-link) {
   @apply underline decoration-dashed underline-offset-2 decoration-1 cursor-pointer transition-all duration-500 ease-out;
 }
 
 a:not(#nav a):not(#posts a):hover {
   @apply bg-green-100;
+}
+
+/* Author links under blog titles: not underlined by default, but underline on hover */
+.author-link {
+  @apply no-underline;
 }
 
 /* Center display math blocks ($$ $$) */

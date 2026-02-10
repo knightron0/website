@@ -65,6 +65,44 @@ export default function Blog({ params }) {
     notFound()
   }
 
+  const renderAuthors = (authors?: string) => {
+    if (!authors) return null
+
+    const matches = Array.from(
+      authors.matchAll(/\[([^\]]+)\]\(([^)]+)\)/g)
+    )
+
+    // If no markdown-style links are found, just render the raw string
+    if (matches.length === 0) {
+      return authors
+    }
+
+    const parts: any[] = []
+
+    matches.forEach((match, index) => {
+      const name = match[1]
+      const href = match[2]
+
+      if (index > 0) {
+        parts.push(', ')
+      }
+
+      parts.push(
+        <a
+          key={index}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="author-link"
+        >
+          {name}
+        </a>
+      )
+    })
+
+    return parts
+  }
+
   return (
     <>
       <section>
@@ -90,14 +128,23 @@ export default function Blog({ params }) {
             }),
           }}
         />
-        <h1 className="text-2xl md:text-3xl font-semibold" style={{ fontFamily: cormorantGaramond.style.fontFamily }}>
+        <h1 className="text-2xl md:text-4xl font-semibold" style={{ fontFamily: cormorantGaramond.style.fontFamily }}>
           {post.metadata.title}
         </h1>
-        <div className="flex justify-between items-center mt-2 mb-8 text-sm">
-          <p className="text-sm text-neutral-600">
-            {formatDate(post.metadata.publishedAt)}
+        <div className="flex items-center my-2 text-md">
+          {post.metadata.authors && (
+            <p className="text-md text-neutral-600">
+              {renderAuthors(post.metadata.authors)}
+            </p>
+          )}
+          {post.metadata.authors && (
+            <span className="mx-2 text-neutral-400">·</span>
+          )}
+          <p className="text-md text-neutral-600">
+            {formatDate(post.metadata.publishedAt, false, false)}
           </p>
         </div>
+        <hr className="my-4 border-gray-300" />
         <article className="prose">
           <CustomMDX source={post.content} />
         </article>

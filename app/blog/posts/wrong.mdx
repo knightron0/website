@@ -2,15 +2,12 @@
 title: 'How Wrong is Too Wrong?'
 publishedAt: '2026-01-20'
 summary: ''
+authors: '[Sarthak Mangla](https://sarthakmangla.com/), [Soham Jog](https://sohamjog.com/), [Somesh Kar](https://someshkar.com/), [Harmya Bhatt](https://harmya.me/)'
 ---
 
-> This is a crosspost from the [Tensara blog](https://tensara.org/blog/how-wrong-is-too-wrong).
-
-For context, I help run [Tensara](https://tensara.org/), a competitive GPU programming platform with [Somesh](https://someshkar.com/), [Soham](https://sohamjog.com/), and [Harmya](https://harmya.me/). If you haven't heard of it before, the gist is to compete to write the fastest GPU kernel for a given mathematical workload (GEMM, Conv, Attention, etc).
+For context, this post is about [Tensara](https://tensara.org/), a competitive GPU programming platform. If you haven't heard of it before, the gist is to compete to write the fastest GPU kernel for a given mathematical workload (GEMM, Conv, Attention, etc). This post is also available on the [Tensara blog](https://tensara.org/blog/how-wrong-is-too-wrong). 
 
 A major part of making this platform work is building robust verification + benchmarking harnesses for our problems. This post is about the former: what it even means to “verify” floating-point GPU kernels, and our efforts to make our acceptance criteria more principled than "ehh `rtol=1e-3` seems fine.”
-
----
 
 Each [Tensara problem](https://tensara.org/problems) is defined by a [reference solution](https://github.com/tensara/problems) $f$: a PyTorch implementation of the semantics of the problem. Let's represent the user submissions by $g$. Given the appropriate inputs $x$ as defined by the problem, we compute a reference output: $y = f(x)$ and a submission output: $w = g(x)$. We then decide whether to accept the submission by comparing $y$ and $w$.
 

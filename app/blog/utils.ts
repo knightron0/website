@@ -6,6 +6,8 @@ type Metadata = {
   publishedAt: string
   summary: string
   image?: string
+  // Optional comma-separated markdown links for authors, e.g. [Name](link), [Name](link)
+  authors?: string
 }
 
 function parseFrontmatter(fileContent: string) {
@@ -53,7 +55,7 @@ export function getBlogPosts() {
   return getMDXData(path.join(process.cwd(), 'app', 'blog', 'posts'))
 }
 
-export function formatDate(date: string, includeRelative = false) {
+export function formatDate(date: string, includeRelative = false, fullMonth = true) {
   let currentDate = new Date()
   if (!date.includes('T')) {
     date = `${date}T00:00:00`
@@ -76,8 +78,9 @@ export function formatDate(date: string, includeRelative = false) {
     formattedDate = 'Today'
   }
 
+  let month = fullMonth ? 'long' : 'short'
   let fullDate = targetDate.toLocaleString('en-us', {
-    month: 'long',
+    month: month as 'long',
     day: 'numeric',
     year: 'numeric',
   })
