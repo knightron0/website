@@ -131,14 +131,14 @@ export default function Blog({ params }) {
         <h1 className="text-2xl md:text-4xl font-semibold" style={{ fontFamily: cormorantGaramond.style.fontFamily }}>
           {post.metadata.title}
         </h1>
-        <div className="flex items-center my-2 text-md">
+        <div className="flex flex-col md:flex-row md:items-center my-2 text-md">
           {post.metadata.authors && (
-            <p className="text-md text-neutral-600">
+            <p className="text-md text-neutral-600 mb-1 md:mb-0">
               {renderAuthors(post.metadata.authors)}
             </p>
           )}
           {post.metadata.authors && (
-            <span className="mx-2 text-neutral-400">·</span>
+            <span className="hidden md:inline mx-2 text-neutral-400">·</span>
           )}
           <p className="text-md text-neutral-600">
             {formatDate(post.metadata.publishedAt, false, false)}

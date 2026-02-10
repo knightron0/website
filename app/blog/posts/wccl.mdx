@@ -13,7 +13,7 @@ More concretely, we would set up a bunch of laptops so that every webcam could s
 
 Naturally, we trivialized all aspects of this from the start, as we expected our communication method to be finicky. The smallest “real” distributed setup we could get away with was data parallelism on just two laptops via a synchronous parameter server[^note]. We picked the [MNIST dataset](https://en.wikipedia.org/wiki/MNIST_database) to train a small CNN on.
 
-<center class="w-full">
+<center>
     <img src="/flow.png" alt="flow" class="w-3/4" />
 </center>
 
@@ -44,7 +44,7 @@ $$
 
 We eventually reached $B \approx 0.93$ KB/s after a lot of blood, sweat, and tears. Each frame was a 40×70 grid (2800 cells), and we held a frame for a generous ~1 second so the webcam *surely* wouldn’t drop or misread it.
 
-<center class="w-full">
+<center>
     <img src="/sample-transmission.png" class="w-3/4" />
     <p class="text-sm text-gray-500">
         A sample transmission grid (this can represent a 21x21 `bfloat16` tensor :o)
@@ -70,7 +70,7 @@ It didn't help that we ran into some strange webcam asymmetry issues, too -- one
 
 Here's what a "reliable" one-way link looked like:
 
-<center class="w-full">
+<center>
   <video controls width="600" class="w-3/4">
     <source src="/calibration.mp4" type="video/mp4" />
     Your browser does not support the video tag.
