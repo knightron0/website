@@ -1,0 +1,36 @@
+---
+title: 'How far can Norm Balancing take you?'
+publishedAt: '2026-02-13'
+summary: ''
+authors: '[Sarthak Mangla](https://sarthakmangla.com/), [Abel Gurung](https://abelgurung.github.io/), [Joseph Campbell](https://joe-campbell.github.io/website/)'
+---
+
+**TL;DR**: Balancing row and column-wise update magnitudes alone can reproduce a surprising share of Muon’s performance. Across a CNN, an MLP, and a small transformer, this lightweight norm-balancing step often matches AdamW and sometimes closes much of the gap to Muon, without explicit orthogonalization and without any extra variance/second-moment buffers. These exploratory results suggest norm balancing may be a simple, useful source of optimizer stability worth studying on its own.
+
+--- 
+
+Preconditioning is an important part of the deep learning optimizer puzzle. Adaptive optimizers like AdamW[^1] rescale each coordinate using a running estimate of the gradient’s second moment. Matrix-aware methods such as Shampoo[^2] and SOAP[^3] go further by explicitly modeling the geometry of matrix-valued parameters through structured preconditioners.
+
+Recent work on Muon[^4] takes a different but related path: rather than estimating curvature, it directly reshapes the *update matrix* itself, approximately orthogonalizing momentum updates via Newton–Schulz before applying them.
+
+Crucially, Muon’s update transform appears to couple at least two effects: (i) reshaping the singular-value spectrum toward a flatter profile, and (ii) redistributing update magnitude across rows and columns. This post isolates the second effect. Concretely: how much stability and performance can we recover by *only* balancing row/column update magnitudes, without enforcing orthogonality?
+
+--- 
+
+In this post, we isolate a single structural effect induced by Muon’s orthogonalization: keeping update magnitudes balanced across rows and columns. We study a stripped-down Muon variant that keeps the same momentum matrix $M_t$, but replaces Newton–Schulz orthogonalization with a lightweight axis-balancing transform. For this post, let's call this variant **BAM: Balanced Axis Momentum**.
+
+Concretely, BAM applies a Sinkhorn inspired process called _SinkNorm_, which alternates row-wise and column-wise $\ell_2$ normalization for $K$ steps:
+
+$$
+\mathrm{RowNorm}(X)_{i,:}=\frac{X_{i,:}}{\|X_{i,:}\|_2+\epsilon},
+\qquad
+\mathrm{ColNorm}(X)_{:,j}=\frac{X_{:,j}}{\|X_{:,j}\|_2+\epsilon}.
+$$
+
+Starting from $X^{(0)} = M_t$, we set 
+$$
+X^{(k+1)} = \mathrm{ColNorm}(\mathrm{RowNorm}(X^{(k)}))
+$$
+(or the reverse order), and define $\widetilde M_t = X^{(K)}$, ending with a normalization along the smaller dimension. This preserves Muon’s overall update structure while isolating the effect of axis-wise norm balancing.
+
+To compare these transforms directly, we take a matrix $M_0 \in \mathbb{R}^{1024\times 1024}$ and apply SinkNorm (BAM) with $K = 1$ or 3 steps of Newton--Schulz, and plot (a) the singular-value spectrum and (b--c) the ratios of row/column $\ell_2$ norms to their median norms:
