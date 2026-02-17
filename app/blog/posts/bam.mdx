@@ -5,7 +5,13 @@ summary: ''
 authors: '[Sarthak Mangla](https://sarthakmangla.com/), [Abel Gurung](https://abelgurung.github.io/)'
 ---
 
+
 **TL;DR**: Balancing row and column-wise update magnitudes alone can reproduce a surprising share of Muon’s performance. Across a CNN, an MLP, and a small transformer, this lightweight norm-balancing step often matches AdamW and sometimes closes much of the gap to Muon, without explicit orthogonalization and without any extra variance/second-moment buffers. These results suggest norm balancing may be a simple, useful source of optimizer stability worth studying on its own.
+
+<center>
+  <img src="/bam/training_metrics.gif" alt="Training metrics over epochs" width="90%" />
+  <figcaption><em>Update matrix stats vs steps (nanoGPT)</em></figcaption>
+</center>
 
 --- 
 
