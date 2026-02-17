@@ -78,7 +78,7 @@ export default function Blog({ params }) {
     }
 
     const parts: any[] = []
-    const marker = post.slug === 'bam' ? '†' : null
+    const marker = post && post.slug === 'bam' ? '†' : null
 
     matches.forEach((match, index) => {
       const name = match[1]
