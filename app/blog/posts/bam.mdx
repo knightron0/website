@@ -48,9 +48,9 @@ SinkNorm largely preserves the spectrum *shape* and mainly rescales to equalize 
 
 ## Experiments
 
-We compare AdamW, Muon, and BAM on three representative settings: a CNN (ResNet-18[^6] on CIFAR-10[^8]), an MLP (a 4-layer ReLU MLP on CIFAR-10), and a small transformer (nanoGPT[^7] on FineWeb[^9]). In all cases we fix the dataset, architecture, and training budget. To isolate the effect of the matrix-update transform, we use the same parameter split in every run: non-2D parameters are always optimized with AdamW using fixed hyperparameters, while hidden 2D weight matrices use AdamW, Muon, or BAM.
+We compare AdamW, Muon, and BAM on three representative settings: a CNN (ResNet-18[^6] on CIFAR-10[^8]), an MLP (a 4-layer ReLU MLP on CIFAR-10), and a small transformer (nanoGPT[^7] on FineWeb[^9]). In all cases, we fix the dataset, architecture, and training budget. To isolate the effect of the matrix-update transform, we use the same parameter split in every run: non-2D parameters are always optimized with AdamW using fixed hyperparameters, while hidden 2D weight matrices use AdamW, Muon, or BAM.
 
-For each experiment we sweep learning rate $\eta$ and batch size $B$ (effective token-batch size for nanoGPT). Each plotted point reports the best final metric at fixed $\eta$ (left) or fixed $B$ (right), maximizing over the remaining sweep dimensions. Full sweep grids and parameter-group definitions are provided [here](#parameter-groups-hyperparameter-sweeps).
+For each experiment, we sweep the learning rate $\eta$ and batch size $B$ (effective token-batch size for nanoGPT). Each plotted point reports the best final metric at fixed $\eta$ (left) or fixed $B$ (right), maximizing over the remaining sweep dimensions. Full sweep grids and parameter-group definitions are provided [here](#parameter-groups-hyperparameter-sweeps).
 
 
 <center>
@@ -72,7 +72,7 @@ For each experiment we sweep learning rate $\eta$ and batch size $B$ (effective 
 
 The same pattern shows up across settings. Muon achieves the best peak performance and tends to keep improving as $\eta$ increases (its optimum shifts toward larger $\eta$). BAM typically peaks at a more moderate $\eta$ than Muon: it looks fairly flat in the MLP, and in nanoGPT it bottoms out around $\eta \approx 10^{-3}$ before largely plateauing. AdamW, in contrast, generally peaks at smaller $\eta$ and is the first to degrade as $\eta$ grows.
 
-As batch size increases, the behavior becomes task-dependent. On ResNet-18, AdamW exhibits the strongest large-$B$ degradation, while BAM stays much closer to Muon's robustness. For the MLP, all three methods remain fairly stable across $B$, with only modest differences and a small crossover around $B = 1024$. For nanoGPT, the largest-token regime is the main outlier: Muon stays best, while BAM and AdamW both deteriorate sharply as tokens/step grow, with BAM drifting toward (and slightly above) AdamW at the extreme.
+As the batch size increases, the behavior becomes task-dependent. On ResNet-18, AdamW exhibits the strongest large-$B$ degradation, while BAM stays much closer to Muon's robustness. For the MLP, all three methods remain fairly stable across $B$, with only modest differences and a small crossover around $B = 1024$. For nanoGPT, the largest-token regime is the main outlier: Muon stays best, while BAM and AdamW both deteriorate sharply as tokens/step grow, with BAM drifting toward (and slightly above) AdamW at the extreme.
 
 --- 
 
@@ -84,11 +84,11 @@ For additional context, we track two update-geometry diagnostics: the update’s
 
 Muon drives $\delta_\perp$ down throughout training, while BAM remains close to AdamW; however, BAM matches Muon in reducing row/column CV, both far below AdamW across models.
 
-## What does this mean? 
+## Discussion
 
 These experiments suggest that Muon’s benefits are not solely tied to spectrum flattening or approximate orthogonalization. A large fraction can be recovered by a much simpler intervention: balancing row- and column-wise update magnitudes, even when the singular-value profile remains largely unchanged.
 
-That said, we only evaluate moderate-scale models under fixed training budgets. The nanoGPT largest-token regime is a concrete case where BAM appears to lose its earlier advantage, hinting that spectrum shaping (or something correlated with it) may matter more in higher batch regime.
+That said, we only evaluate moderate-scale models under fixed training budgets. The nanoGPT largest-token regime is a concrete case where BAM appears to lose its earlier advantage, hinting that spectrum shaping (or something correlated with it) may matter more in higher batch regimes.
 
 
 Overall, these results are mainly meant as a lens: lightweight geometric control can already go a long way, and it provides a simpler way to reason about what Muon is buying beyond spectrum shaping.
@@ -229,7 +229,7 @@ $$
 Intuitively, $\delta_\perp(M)$ reflects the typical magnitude of off-diagonal correlations between normalized shorter-axis vectors. It is zero when they are exactly orthonormal, and increases as they become more aligned.
 
 ### Parameter Groups + Hyperparameter Sweeps
-Across experimnets, we split parameters into a **2D group** (matrix-valued weights) and a **fixed-AdamW group** (everything else). For all runs, we apply Muon/BAM/AdamW only to the 2D group, while training the remaining parameters with a fixed AdamW configuration.
+Across experiments, we split parameters into a **2D group** (matrix-valued weights) and a **fixed-AdamW group** (everything else). For all runs, we apply Muon/BAM/AdamW only to the 2D group, while training the remaining parameters with a fixed AdamW configuration.
 
 **ResNet-18:** The 2D group consists of all convolution kernels inside residual blocks and shortcut paths (4D kernels reshaped to 2D), excluding the stem `conv1.weight`. The fixed-AdamW group includes `conv1.weight`, all BatchNorm parameters, and classifier parameters (`linear.weight`, `linear.bias`).
 
