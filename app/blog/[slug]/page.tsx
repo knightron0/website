@@ -78,6 +78,7 @@ export default function Blog({ params }) {
     }
 
     const parts: any[] = []
+    const marker = post.slug === 'bam' ? '†' : null
 
     matches.forEach((match, index) => {
       const name = match[1]
@@ -88,15 +89,21 @@ export default function Blog({ params }) {
       }
 
       parts.push(
-        <a
-          key={index}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="author-link"
-        >
-          {name}
-        </a>
+        <span key={index}>
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="author-link"
+          >
+            {name}
+          </a>
+          {marker && (
+            <sup className="ml-0.5 align-super text-xs text-neutral-500">
+              {marker}
+            </sup>
+          )}
+        </span>
       )
     })
 
@@ -144,6 +151,11 @@ export default function Blog({ params }) {
             {formatDate(post.metadata.publishedAt, false, false)}
           </p>
         </div>
+        {post.slug === 'bam' && (
+          <p className="text-sm text-neutral-500">
+            <sup className="mr-1">†</sup>Purdue University
+          </p>
+        )}
         <hr className="my-4 border-gray-300" />
         <article className="prose">
           <CustomMDX source={post.content} />

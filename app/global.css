@@ -201,7 +201,6 @@ a:not(#nav a):not(#posts a):not(.anchor):hover {
   @apply bg-green-100;
 }
 
-/* Author links under blog titles: not underlined by default, but underline on hover */
 .author-link {
   @apply no-underline;
 }

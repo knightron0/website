@@ -88,7 +88,7 @@ Muon drives $\delta_\perp$ down throughout training, while BAM remains close to 
 
 These experiments suggest that Muon’s benefits are not solely tied to spectrum flattening or approximate orthogonalization. A large fraction can be recovered by a much simpler intervention: balancing row- and column-wise update magnitudes, even when the singular-value profile remains largely unchanged.
 
-That said, we only evaluate moderate-scale models under fixed training budgets. A key open question is when full orthogonalization becomes necessary -- perhaps at larger token batches, greater depth, or longer training horizons. The nanoGPT largest-token regime is a concrete case where BAM appears to lose its earlier advantage, hinting that spectrum shaping (or something correlated with it) may matter more in higher batch regime.
+That said, we only evaluate moderate-scale models under fixed training budgets. The nanoGPT largest-token regime is a concrete case where BAM appears to lose its earlier advantage, hinting that spectrum shaping (or something correlated with it) may matter more in higher batch regime.
 
 
 Overall, these results are mainly meant as a lens: lightweight geometric control can already go a long way, and it provides a simpler way to reason about what Muon is buying beyond spectrum shaping.
@@ -167,11 +167,14 @@ We ablated the number of SinkNorm iterations $k$ used in BAM, including $k=0$ as
 
 
 ## Future Work
-There are a few obvious next steps. One is to test how far this story scales by testing on larger models, more training steps, and more extreme batch sizes.  Another is to probe mechanism more directly by tracking what changes in the training dynamics (beyond the simple geometry metrics here) when we balance axes versus when we also reshape the spectrum.  Finally, it would be useful to connect these empirical regimes to a mechanistic explanation by tracking how balancing vs orthogonalization changes update–weight alignment, effective step size, and per-layer conditioning over training
+There are a few obvious next steps. One is to test how far norm balancing scales by testing on larger models, more training steps, and more extreme batch sizes.  Another is to probe the underlying mechanism more directly by tracking what changes in the training dynamics (beyond the simple geometry metrics here) when we balance axes vs when we also reshape the spectrum. Finally, it would be useful to connect these empirical regimes to a theoretical picture of why axis balancing helps. 
+
+These results suggest that surprisingly simple geometric interventions can already go a long way. We hope this analysis serves as a starting point for further investigation into this line of questioning. Our code for the experiments is available [here](https://github.com/knightron0/bam).
 
 ## Acknowledgments
-We would like to thank [Prof. Joseph Campbell](https://joe-campbell.github.io/website/) for helpful discussion and feedback on this work. We also thank Keller Jordan for his work on running the [CIFAR-10](https://github.com/KellerJordan/cifar10-airbench) and [nanoGPT](https://github.com/KellerJordan/modded-nanogpt) speedruns.
+We would like to thank [Prof. Joseph Campbell](https://joe-campbell.github.io/website/) for helpful discussion and feedback on this work. We also thank [Keller Jordan](https://kellerjordan.github.io/) for his work on running the [CIFAR-10](https://github.com/KellerJordan/cifar10-airbench) and [nanoGPT](https://github.com/KellerJordan/modded-nanogpt) speedruns.
 
+--- 
 
 ## Citation
 
@@ -198,7 +201,7 @@ While the paper is not yet published, you can cite this work as:
 [^6]: He, K. et al. (2015) "[Deep Residual Learning for Image Recognition](http://arxiv.org/abs/1512.03385)".
 [^7]: Karpathy, A. (2022) "[nanoGPT](https://github.com/karpathy/nanoGPT)".
 [^8]: Krizhevsky, A. and Hinton, G. (2009) "[Learning multiple layers of features from tiny images](https://www.cs.toronto.edu/~kriz/learning-features-2009-TR.pdf)".
-[^9]: Penedo, G. et al. (2024) "[The FineWeb Datasets: Decanting the Web for the Finest Text Data at Scale](https://openreview.net/forum?id=n6SCkn2QaG.)".
+[^9]: Penedo, G. et al. (2024) "[The FineWeb Datasets: Decanting the Web for the Finest Text Data at Scale](https://openreview.net/forum?id=n6SCkn2QaG)".
 
 
 
@@ -253,7 +256,7 @@ $$
 B = A\,B_M\,L \quad\Rightarrow\quad A=\frac{B}{12\cdot 1024}\in\{4,8,16,32,48\}.
 $$
 
-The 2D group consists of all matrix weights in attention/MLP blocks (e.g., `c_attn.weight`, `c_proj.weight`, `c_fc.weight`). The fixed-AdamW group includes the token/position embeddings (`wte`, `wpe`), `lm_head`, and all non-2D parameters (biases and normalization parameters). We also modify the original nanoGPT implementation with a few modernization tweaks: RMSNorm, QK norm, ReLU$^2$ in place of GELU, and zero-initialized residual projection matrices.
+The 2D group consists of all matrix weights in attention/MLP blocks (e.g., `c_attn.weight`, `c_proj.weight`, `c_fc.weight`). The fixed-AdamW group includes the token/position embeddings (`wte`, `wpe`), `lm_head`, and all non-2D parameters (biases and normalization parameters). We also modify the original nanoGPT implementation with a few modernization tweaks: [QK norm](https://x.com/kellerjordan0/status/1845865705432047663?s=20), [ReLU$^2$ in place of GELU](https://x.com/kellerjordan0/status/1845865702579921318?s=20), and [zero-initialized residual projection matrices](https://x.com/kellerjordan0/status/1845865703888589204?s=20).
 
 We sweep:
 - token batch size $B \in \{49152,98304,196608,393216,589824\}$
