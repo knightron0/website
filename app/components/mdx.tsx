@@ -204,6 +204,12 @@ function preprocessFootnotes(source: string) {
     })
     .join('\n')
 
+  // If [[FOOTNOTES]] marker is present, replace it with the footnote list.
+  // Otherwise append at the end (default behavior).
+  if (replacedBody.includes('[[FOOTNOTES]]')) {
+    return replacedBody.replace('[[FOOTNOTES]]', list)
+  }
+
   return `${replacedBody}\n\n---\n\n${list}\n`
 }
 
