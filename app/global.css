@@ -34,7 +34,7 @@ html {
 }
 
 .prose .anchor {
-  @apply absolute invisible no-underline;
+  @apply absolute no-underline opacity-0 transition-opacity duration-150;
 
   margin-left: -1em;
   padding-right: 0.5em;
@@ -43,8 +43,9 @@ html {
   cursor: pointer;
 }
 
-.anchor:hover {
-  @apply visible;
+.anchor:hover,
+.prose *:hover > .anchor {
+  @apply opacity-40;
 }
 
 .prose a {
@@ -61,7 +62,9 @@ html {
 }
 
 .prose pre {
-  @apply bg-neutral-50 rounded-lg overflow-x-auto border border-neutral-200 py-2 px-3 text-sm;
+  @apply rounded-lg overflow-x-auto py-2 px-3 text-sm;
+  background-color: #282c34;
+  border: 1px solid #3e4451;
 }
 
 .prose code {
@@ -76,6 +79,7 @@ html {
   @apply p-0;
   border: initial;
   line-height: 1.5;
+  background: transparent;
 }
 
 .prose code span {
@@ -124,7 +128,7 @@ html {
 }
 
 .prose h2 {
-  @apply text-xl font-medium tracking-tight mt-6 mb-2;
+  @apply text-2xl font-medium tracking-tight mt-6 mb-2;
 }
 
 .prose h3 {
@@ -193,7 +197,7 @@ a:not(#nav a):not(#posts a):not(.author-link) {
   @apply underline decoration-dashed underline-offset-2 decoration-1 cursor-pointer transition-all duration-500 ease-out;
 }
 
-a:not(#nav a):not(#posts a):hover {
+a:not(#nav a):not(#posts a):not(.anchor):hover {
   @apply bg-green-100;
 }
 
