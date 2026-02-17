@@ -17,9 +17,7 @@ Muon’s update transform mixes two geometric effects. It pushes momentum update
 
 --- 
 
-In this post, we isolate a single structural effect induced by Muon’s orthogonalization: keeping update magnitudes balanced across rows and columns. We study a stripped-down Muon variant that keeps the same momentum matrix $M_t$, but replaces Newton–Schulz orthogonalization with a lightweight axis-balancing transform. For this post, let's call this variant **BAM: Balanced Axis Momentum**.
-
-Concretely, BAM applies a [Sinkhorn-Knopp](https://msp.org/pjm/1967/21-2/pjm-v21-n2-p14-s.pdf) inspired process called _SinkNorm_, which alternates row-wise and column-wise $\ell_2$ normalization for $K$ steps:
+We study a stripped-down Muon variant that keeps the same momentum matrix $M_t$, but replaces Newton–Schulz orthogonalization with a lightweight axis-balancing transform. For this post, let's call this variant **BAM: Balanced Axis Momentum**. Concretely, BAM applies a [Sinkhorn-Knopp](https://msp.org/pjm/1967/21-2/pjm-v21-n2-p14-s.pdf) inspired process called _SinkNorm_, which alternates row-wise and column-wise $\ell_2$ normalization for $K$ steps:
 
 ```python
 def sinknorm(M, K: int, eps: float = 1e-7):
@@ -44,11 +42,11 @@ To compare these transforms directly, we take a matrix $M_0 \in \mathbb{R}^{1024
 </figure>
 </center>
 
-SinkNorm largely preserves the spectrum *shape* and mainly rescales to equalize row/column norms (i.e. condition number remains roughly the same). Newton–Schulz pushes the spectrum toward a much flatter, near–unit singular-value distribution while also improving row/column norm balance (though with noticeably more spread than SinkNorm).
+SinkNorm largely preserves the spectrum *shape* and mainly rescales to equalize row/column norms (i.e. condition number remains roughly the same). Newton–Schulz pushes the spectrum toward a much flatter, near-unit singular-value distribution while also improving row/column norm balance (though with noticeably more spread than SinkNorm).
 
 ## Experiments
 
-We compare AdamW, Muon, and BAM on three representative settings: a CNN (ResNet-18[^6] on CIFAR-10[^8]), an MLP (a 4-layer ReLU MLP on CIFAR-10), and a small transformer (nanoGPT[^7] on FineWeb[^9]). In all cases, we fix the dataset, architecture, and training budget. To isolate the effect of the matrix-update transform, we use the same parameter split in every run: non-2D parameters are always optimized with AdamW using fixed hyperparameters, while hidden 2D weight matrices use AdamW, Muon, or BAM.
+We compare AdamW, Muon, and BAM on three settings: a CNN (ResNet-18[^6] on CIFAR-10[^8]), an MLP (a 4-layer MLP on CIFAR-10), and a small transformer (nanoGPT[^7] on FineWeb[^9]). In all cases, we fix the dataset, architecture, and training budget. To isolate the effect of the matrix-update transform, we use the same parameter split in every run: non-2D parameters are always optimized with AdamW using fixed hyperparameters, while hidden 2D weight matrices use AdamW, Muon, or BAM.
 
 For each experiment, we sweep the learning rate $\eta$ and batch size $B$ (effective token-batch size for nanoGPT). Each plotted point reports the best final metric at fixed $\eta$ (left) or fixed $B$ (right), maximizing over the remaining sweep dimensions. Full sweep grids and parameter-group definitions are provided [here](#parameter-groups-hyperparameter-sweeps).
 
@@ -86,7 +84,7 @@ Muon drives $\delta_\perp$ down throughout training, while BAM remains close to 
 
 ## Discussion
 
-These experiments suggest that Muon’s benefits are not solely tied to spectrum flattening or approximate orthogonalization. A large fraction can be recovered by a much simpler intervention: balancing row- and column-wise update magnitudes, even when the singular-value profile remains largely unchanged.
+These experiments suggest that Muon’s benefits are not solely tied to spectrum flattening or approximate orthogonalization. A large fraction can be recovered by a much simpler geometric intervention of balancing row- and column-wise update magnitudes, even when the singular-value profile remains largely unchanged.
 
 That said, we only evaluate moderate-scale models under fixed training budgets. The nanoGPT largest-token regime is a concrete case where BAM appears to lose its earlier advantage, hinting that spectrum shaping (or something correlated with it) may matter more in higher batch regimes.
 
@@ -98,7 +96,7 @@ Overall, these results are mainly meant as a lens: lightweight geometric control
 Beyond the core sweeps, we ran a handful of smaller experiments to probe where the mechanisms might break. These are not as fully tuned or exhaustive, but they helped surface a few concrete questions worth following up on.
 
 ### One-Axis Balancing 
-We tested a simplified variant of BAM (“HalfBAM”) that only normalizes the update along the shorter axis (i.e., enforces a shortest-axis ℓ₂ normalization) rather than alternating row/column normalization to balance both axes.
+We tested a simplified variant of BAM (let's call it HalfBAM) that only normalizes the update along the shorter axis (i.e., enforces a shortest-axis ℓ₂ normalization) rather than alternating row/column normalization to balance both axes.
 
 <center>
 <div class="flex flex-col gap-4">
@@ -161,7 +159,7 @@ We ablated the number of SinkNorm iterations $k$ used in BAM, including $k=0$ as
   <img src="/bam/sgd_sink0.png" width="40%" />
 </div>
 <center>
-<figcaption>Left: Val loss vs SinkNorm iterations. Right: BAM with $k=0$ vs. Nesterov SGD ($\eta = 0.001$)</figcaption>
+<figcaption>Left: Val loss vs SinkNorm iterations. Right: BAM with $k=0, 1$ vs. Nesterov SGD ($\eta = 0.001$)</figcaption>
 </center>
 </figure>
 
