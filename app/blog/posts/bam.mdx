@@ -11,7 +11,7 @@ authors: '[Sarthak Mangla](https://sarthakmangla.com/), [Abel Gurung](https://ab
 
 Preconditioning is an important part of the deep learning optimizer puzzle. Adaptive optimizers like AdamW[^1] rescale each coordinate using a running estimate of the gradient’s second moment. Matrix-aware methods such as Shampoo[^2] and SOAP[^3] go further by explicitly modeling the geometry of matrix-valued parameters through structured preconditioners.
 
-Recent work on Muon[^4] takes a different but related path: rather than estimating curvature, it directly reshapes the *update matrix* itself, approximately orthogonalizing momentum updates via Newton–Schulz before applying them. This preconditioning of the momentum updates is conceptually similar to Shampoo with its EMAs disabled: both project updates toward semi-orthogonal matrices.
+Recent work on Muon[^4] takes a different but related path: rather than estimating curvature, it directly reshapes the *update matrix* itself, approximately orthogonalizing momentum updates via Newton–Schulz before applying them. This preconditioning of the momentum updates is conceptually similar[^5] to Shampoo with its EMAs disabled: both project updates toward semi-orthogonal matrices.
 
 Muon’s update transform mixes two geometric effects. It pushes momentum updates toward being semi-orthogonal along the shorter axis (via approximate orthogonalization), while also making the update closer to unit-norm per row/column. This post isolates the second effect. Concretely: how much stability and performance can we recover by *only* balancing row/column update magnitudes, without enforcing orthogonality?
 
@@ -19,7 +19,7 @@ Muon’s update transform mixes two geometric effects. It pushes momentum update
 
 In this post, we isolate a single structural effect induced by Muon’s orthogonalization: keeping update magnitudes balanced across rows and columns. We study a stripped-down Muon variant that keeps the same momentum matrix $M_t$, but replaces Newton–Schulz orthogonalization with a lightweight axis-balancing transform. For this post, let's call this variant **BAM: Balanced Axis Momentum**.
 
-Concretely, BAM applies a Sinkhorn inspired process called _SinkNorm_, which alternates row-wise and column-wise $\ell_2$ normalization for $K$ steps:
+Concretely, BAM applies a [Sinkhorn-Knopp](https://msp.org/pjm/1967/21-2/pjm-v21-n2-p14-s.pdf) inspired process called _SinkNorm_, which alternates row-wise and column-wise $\ell_2$ normalization for $K$ steps:
 
 ```python
 def sinknorm(M, K: int, eps: float = 1e-7):
@@ -36,7 +36,7 @@ def sinknorm(M, K: int, eps: float = 1e-7):
     return X
 ```
 
-To compare these transforms directly, we take a matrix $M_0 \in \mathbb{R}^{1024\times 1024}$ and apply SinkNorm (BAM) with $K = 1$ or 3 steps of Newton--Schulz, and plot (a) the singular-value spectrum and (b--c) the ratios of row/column $\ell_2$ norms to their median norms:
+To compare these transforms directly, we take a matrix $M_0 \in \mathbb{R}^{1024\times 1024}$ and apply SinkNorm (BAM) with $K = 1$ or 3 steps of Newton-Schulz, and plot (a) the singular-value spectrum and (b--c) the ratios of row/column $\ell_2$ norms to their median norms:
 
 <center>
 <figure>
@@ -48,24 +48,24 @@ SinkNorm largely preserves the spectrum *shape* and mainly rescales to equalize 
 
 ## Experiments
 
-We compare AdamW, Muon, and BAM on three representative settings: a CNN (ResNet-18 on CIFAR-10), an MLP (a 4-layer ReLU MLP on CIFAR-10), and a small transformer (nanoGPT on FineWeb). In all cases we fix the dataset, architecture, and training budget. To isolate the effect of the matrix-update transform, we use the same parameter split in every run: non-2D parameters are always optimized with AdamW using fixed hyperparameters, while hidden 2D weight matrices use AdamW, Muon, or BAM.
+We compare AdamW, Muon, and BAM on three representative settings: a CNN (ResNet-18[^6] on CIFAR-10[^8]), an MLP (a 4-layer ReLU MLP on CIFAR-10), and a small transformer (nanoGPT[^7] on FineWeb[^9]). In all cases we fix the dataset, architecture, and training budget. To isolate the effect of the matrix-update transform, we use the same parameter split in every run: non-2D parameters are always optimized with AdamW using fixed hyperparameters, while hidden 2D weight matrices use AdamW, Muon, or BAM.
 
-For each experiment we sweep learning rate $\eta$ and batch size $B$ (effective token-batch size for nanoGPT). Each plotted point reports the best final metric at fixed $\eta$ (left) or fixed $B$ (right), maximizing over the remaining sweep dimensions. Full sweep grids and parameter-group definitions are provided in the Appendix.
+For each experiment we sweep learning rate $\eta$ and batch size $B$ (effective token-batch size for nanoGPT). Each plotted point reports the best final metric at fixed $\eta$ (left) or fixed $B$ (right), maximizing over the remaining sweep dimensions. Full sweep grids and parameter-group definitions are provided [here](#parameter-groups-hyperparameter-sweeps).
 
 
 <center>
 <div class="flex flex-col gap-4">
   <figure>
   <img src="/bam/cnn_perf.png" alt="ResNet-18 CIFAR-10 sweep results" width="80%" />
-      <figcaption><em>ResNet-18 on CIFAR-10 (100 epochs, top-1 test accuracy)</em> </figcaption>
+      <figcaption><em>ResNet-18[^6] on CIFAR-10[^8] (100 epochs, top-1 test accuracy)</em> </figcaption>
   </figure>
   <figure>
     <img src="/bam/mlp_perf.png" alt="4-layer MLP CIFAR-10 sweep results" width="80%" />
-      <figcaption><em>4-layer MLP on CIFAR-10 (50 epochs, top-1 test accuracy)</em> </figcaption>
+      <figcaption><em>4-layer MLP on CIFAR-10[^8] (50 epochs, top-1 test accuracy)</em> </figcaption>
   </figure>
   <figure>
     <img src="/bam/nanogpt_perf.png" alt="nanoGPT FineWeb sweep results" width="80%" />
-      <figcaption><em>nanoGPT on FineWeb (700M tokens, final validation loss)</em> </figcaption>
+      <figcaption><em>nanoGPT[^7] on FineWeb[^9] (700M tokens, final validation loss)</em> </figcaption>
   </figure>
 </div>
 </center>
@@ -76,7 +76,7 @@ As batch size increases, the behavior becomes task-dependent. On ResNet-18, Adam
 
 --- 
 
-For additional context, we track two update-geometry diagnostics: the update’s distance to orthogonality (defined [here](https://hackmd.io/FB3RsLaJRGG8xyecmdG1qg?stext=7804%3A36%3A1%3A1771198643%3AteG9_j&both=)) $\delta_{\perp}$ and the row/column $\ell_2$ coefficient of variation (the standard deviation of $\ell_2$ norms divided by their mean). These are computed on a hidden weight matrix: the MLP’s second linear layer, a convolutional layer in ResNet’s second stage, and (for nanoGPT) the first block’s self-attention QKV projection. We log these across training steps for the best-performing run within each (model, optimizer) pair:
+For additional context, we track two update-geometry diagnostics: the update’s distance to orthogonality (defined [here](#orthogonality-gap-object-object)) $\delta_{\perp}$ and the row/column $\ell_2$ coefficient of variation (the standard deviation of $\ell_2$ norms divided by their mean). These are computed on a hidden weight matrix: the MLP’s second linear layer, a convolutional layer in ResNet’s second stage, and (for nanoGPT) the first block’s self-attention QKV projection. We log these across training steps for the best-performing run within each (model, optimizer) pair:
 
 <center>
 <img src="/bam/update_geometry.png" width="80%" />
@@ -94,9 +94,8 @@ That said, we only evaluate moderate-scale models under fixed training budgets. 
 Overall, these results are mainly meant as a lens: lightweight geometric control can already go a long way, and it provides a simpler way to reason about what Muon is buying beyond spectrum shaping.
 
 
-## Additional Experiments + Future Work
+## Additional Experiments
 Beyond the core sweeps, we ran a handful of smaller experiments to probe where the mechanisms might break. These are not as fully tuned or exhaustive, but they helped surface a few concrete questions worth following up on.
-
 
 ### One-Axis Balancing 
 We tested a simplified variant of BAM (“HalfBAM”) that only normalizes the update along the shorter axis (i.e., enforces a shortest-axis ℓ₂ normalization) rather than alternating row/column normalization to balance both axes.
@@ -167,9 +166,11 @@ We ablated the number of SinkNorm iterations $k$ used in BAM, including $k=0$ as
 </figure>
 
 
+## Future Work
+There are a few obvious next steps. One is to test how far this story scales by testing on larger models, more training steps, and more extreme batch sizes.  Another is to probe mechanism more directly by tracking what changes in the training dynamics (beyond the simple geometry metrics here) when we balance axes versus when we also reshape the spectrum.  Finally, it would be useful to connect these empirical regimes to a mechanistic explanation by tracking how balancing vs orthogonalization changes update–weight alignment, effective step size, and per-layer conditioning over training
 
---- 
-
+## Acknowledgments
+We would like to thank [Prof. Joseph Campbell](https://joe-campbell.github.io/website/) for helpful discussion and feedback on this work. We also thank Keller Jordan for his work on running the [CIFAR-10](https://github.com/KellerJordan/cifar10-airbench) and [nanoGPT](https://github.com/KellerJordan/modded-nanogpt) speedruns.
 
 
 ## Citation
@@ -177,10 +178,10 @@ We ablated the number of SinkNorm iterations $k$ used in BAM, including $k=0$ as
 While the paper is not yet published, you can cite this work as:
 ```latex
 @article{bam2026,
-  title   = "Norm Balancing Optimizers",
-  author  = "Mangla, Sarthak and Gurung, Abel",
-  year    = "2026",
-  month   = "February",
+  title   = {Norm Balancing Optimizers},
+  author  = {Mangla, Sarthak and Gurung, Abel},
+  year    = {2026},
+  month   = {February},
   url     = "https://sarthakmangla.com/blog/bam/"
 }
 ```
@@ -189,10 +190,17 @@ While the paper is not yet published, you can cite this work as:
 
 [[FOOTNOTES]]
 
-[^1]: Loshchilov, I. and Hutter, F. (2019) 'Decoupled Weight Decay Regularization'. Available at: http://arxiv.org/abs/1711.05101.
-[^2]: Gupta, V., Koren, T. and Singer, Y. (2018) 'Shampoo: Preconditioned Stochastic Tensor Optimization'. Available at: http://arxiv.org/abs/1802.09568.
-[^3]: Vyas, N. et al. (2025) 'SOAP: Improving and Stabilizing Shampoo using Adam'. Available at: http://arxiv.org/abs/2409.11321.
-[^4]: Jordan, K. et al. (2024) 'Muon: An optimizer for hidden layers in neural networks'. Available at: https://kellerjordan.github.io/posts/muon/.
+[^1]: Loshchilov, I. and Hutter, F. (2019) "[Decoupled Weight Decay Regularization](http://arxiv.org/abs/1711.05101)".
+[^2]: Gupta, V., Koren, T. and Singer, Y. (2018) "[Shampoo: Preconditioned Stochastic Tensor Optimization](http://arxiv.org/abs/1802.09568)".
+[^3]: Vyas, N. et al. (2025) "[SOAP: Improving and Stabilizing Shampoo using Adam](http://arxiv.org/abs/2409.11321)".
+[^4]: Jordan, K. et al. (2024) "[Muon: An optimizer for hidden layers in neural networks](https://kellerjordan.github.io/posts/muon/)".
+[^5]: Bernstein, J. and Newhouse, L. (2024) "[Old Optimizer, New Norm: An Anthology](http://arxiv.org/abs/2409.20325)".
+[^6]: He, K. et al. (2015) "[Deep Residual Learning for Image Recognition](http://arxiv.org/abs/1512.03385)".
+[^7]: Karpathy, A. (2022) "[nanoGPT](https://github.com/karpathy/nanoGPT)".
+[^8]: Krizhevsky, A. and Hinton, G. (2009) "[Learning multiple layers of features from tiny images](https://www.cs.toronto.edu/~kriz/learning-features-2009-TR.pdf)".
+[^9]: Penedo, G. et al. (2024) "[The FineWeb Datasets: Decanting the Web for the Finest Text Data at Scale](https://openreview.net/forum?id=n6SCkn2QaG.)".
+
+
 
 --- 
 
