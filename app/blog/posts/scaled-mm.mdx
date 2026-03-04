@@ -1,0 +1,87 @@
+---
+title: 'torch.scaled_mm'
+publishedAt: '2026-02-25'
+summary: ''
+authors: '[Sarthak Mangla](https://sarthakmangla.com/)'
+---
+
+There is frustratingly little documentation on [torch.scaled_mm](https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_mm.html). 
+
+For context, I was attempting to add support for MXFP4/MXFP8 and NVFP4 on Tensara. 
+
+After asking all the possible models and searching through documentation, the best bet ended up being using DeepWiki on the PyTorch source code. 
+
+- microscaling formats
+basic overview of nvfp4, mxfp4, fp8
+- swizzling
+- final support, how to run nvfp4 / mxfp4 / fp8 -- deos that makes sesne?
+
+
+Key Details for Your torch.scaled_mm Blog Post
+Overview
+torch.scaled_mm is PyTorch's low-level primitive for scaled matrix multiplication with support for microscaling formats (FP8, FP4) and various scaling recipes. It's designed for high-performance inference on modern GPUs with specialized tensor cores.
+
+Core Architecture
+API Surface
+The main entry point is torch.nn.functional.scaled_mm which accepts matrices, scaling factors, scaling recipes, and swizzle patterns functional.py:6744-6757 . The function normalizes inputs and dispatches to torch._scaled_mm_v2 functional.py:6810-6823 .
+
+Dispatch System
+PyTorch uses a dispatch table to select the appropriate implementation based on scaling recipes and data types ScaledBlas.cpp:671-683 . Supported implementations include:
+
+TensorWise scaling
+RowWise scaling
+BlockWise scaling (1x128, 128x128 variants)
+MXFP8/MXFP4 microscaling
+NVFP4 microscaling
+Microscaling Formats
+FP8 Support
+FP8 formats (e4m3fn, e5m2) support per-tensor and per-row scaling ScaledBlas.cpp:672-674 . Scales are typically float32 for FP8 tensorwise/rowwise recipes.
+
+MXFP8
+MXFP8 uses block-wise scaling with 32-element blocks and float8_e8m0fnu scales ScaledBlas.cpp:682-683 . Requires swizzling on CUDA (SWIZZLE_32_4_4) but not on ROCm GroupedBlas.cpp:98-103 .
+
+MXFP4
+MXFP4 uses packed FP4 format (float4_e2m1fn_x2) with block-wise scaling. Only supported on B200/B300 GPUs (compute capability 10.x) ScaledBlas.cpp:1088-1098 . Uses 32-element blocks with specific scale tensor shapes ScaledBlas.cpp:1125-1128 .
+
+NVFP4
+NVFP4 is NVIDIA's FP4 format with two-level scaling (block + global). Uses 16-element blocks and requires SWIZZLE_32_4_4 pattern ScaledBlas.cpp:1220-1228 . Not supported on ROCm ScaledBlas.cpp:1193-1195 .
+
+Swizzling
+Swizzling reorganizes scale tensor memory layout for better hardware utilization:
+
+NO_SWIZZLE: Default for most cases
+SWIZZLE_32_4_4: Required for MXFP8/NVFP4 on CUDA test_scaled_matmul_cuda.py:598-601
+Usage Examples
+Basic FP8 TensorWise
+out = torch.nn.functional.scaled_mm(  
+    a_fp8, b_fp8,  
+    scale_a=scale_a,  
+    scale_recipe_a=ScalingType.TensorWise,  
+    scale_b=scale_b,  
+    scale_recipe_b=ScalingType.TensorWise,  
+    out_dtype=torch.bfloat16  
+)
+MXFP8 BlockWise
+out = torch.nn.functional.scaled_mm(  
+    a_fp8, b_fp8,  
+    scale_a=blocked_scale_a,  
+    scale_recipe_a=ScalingType.BlockWise1x32,  
+    scale_b=blocked_scale_b,  
+    scale_recipe_b=ScalingType.BlockWise1x32,  
+    swizzle_a=SwizzleType.SWIZZLE_32_4_4,  
+    swizzle_b=SwizzleType.SWIZZLE_32_4_4,  
+    out_dtype=torch.bfloat16  
+)
+Device Support
+CUDA: Supports all formats, requires compute capability 8.9+ CUDAScaledBlas.h:76-80
+ROCm: Supports FP8 and MXFP8, not NVFP4
+Implementation Notes
+FP4 uses packed format (2 values per element), requiring K dimension adjustment _meta_registrations.py:6787-6790
+Scale tensor shapes must match specific block layouts (see error messages in tests) test_scaled_matmul_cuda.py:2154-2174
+Fast accumulation (use_fast_accum=True) available on Hopper+ GPUs for better performance
+Notes
+The implementation includes extensive validation for scale tensor shapes and types
+Grouped GEMM operations are supported via torch._scaled_grouped_mm with similar format support
+Compilation with torch.compile is supported and can provide additional performance benefits test_scaled_matmul_cuda.py:2365-2391
+Wiki pages you might want to explore:
+
