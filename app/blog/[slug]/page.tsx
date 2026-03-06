@@ -34,7 +34,7 @@ export function generateMetadata({ params }) {
     ? image
     : `${baseUrl}/og/blog/${post.slug}`
 
-  return {
+  const metadata = {
     title,
     description,
     openGraph: {
@@ -55,7 +55,23 @@ export function generateMetadata({ params }) {
       description,
       images: [ogImage],
     },
+    other: {}
   }
+
+  // Google Scholar citation meta tags for the BAM post
+  if (post.slug === 'bam') {
+    metadata.other = {
+      citation_title: 'Norm Balancing Optimizers',
+      citation_author: 'Sarthak Mangla, Abel Gurung',
+      citation_publication_date: '2026/02/17',
+      citation_abstract:
+        'Balancing row and column-wise update magnitudes alone can reproduce a surprising share of Muon’s performance. Across a CNN, an MLP, and a small transformer, this lightweight norm-balancing step often matches AdamW and sometimes closes much of the gap to Muon, without explicit orthogonalization and without any extra variance/second-moment buffers. These results suggest norm balancing may be a simple, useful source of optimizer stability worth studying on its own.',
+      citation_pdf_url: `${baseUrl}/papers/bam.pdf`,
+      citation_fulltext_html_url: `${baseUrl}/blog/bam`,
+    }
+  }
+
+  return metadata
 }
 
 export default function Blog({ params }) {

@@ -1,8 +1,10 @@
 import { BlogPosts } from 'app/components/posts'
 import { Cormorant_Garamond } from 'next/font/google'
+import { baseUrl } from 'app/sitemap'
 
 export const metadata = {
   title: 'Blog',
+  alternates: { canonical: `${baseUrl}/blog` },
 }
 
 const cormorantGaramond = Cormorant_Garamond({

@@ -1,6 +1,11 @@
 import { Cormorant_Garamond } from 'next/font/google'
 import Link from "next/link";
 import Footer from './components/footer';
+import { baseUrl } from './sitemap';
+
+export const metadata = {
+  alternates: { canonical: baseUrl },
+};
 
 const cormorantGaramond = Cormorant_Garamond({
   subsets: ['latin'],
