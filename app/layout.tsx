@@ -53,10 +53,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cx(
-        'text-black bg-[#FCF6F1]',
-        ibmPlexSans.variable
-      )}
+      className={cx('text-black bg-[#FCF6F1]')}
     >
       <body className={`antialiased max-w-3xl mx-4 mt-8 lg:mx-auto ${ibmPlexSans.className}`}>
         <main className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
