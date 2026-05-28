@@ -17,7 +17,7 @@ export default function Page() {
     <>
       <section className='mb-10'>
         <div className="text-2xl md:text-3xl font-semibold pb-5" style={{ fontFamily: cormorantGaramond.style.fontFamily }}>Sarthak Mangla</div>
-        <p>I study Computer Science (and some Math) at <Link href="https://www.cs.purdue.edu/">Purdue University</Link>.</p>
+        <p>I recently wrapped up four awesome years at Purdue. This fall, I'll be starting my MSCS at Stanford.</p>
         <br />
         <p>I'm broadly interested in improving compute and data efficiency across the AI stack. My immediate goal is to build intuition for each layer so I can contribute meaningfully to both. </p>
         <br />
