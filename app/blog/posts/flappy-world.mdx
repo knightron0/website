@@ -79,9 +79,7 @@ where each index is just the discretized bin for that field.
 
 ----
 
-Okay, now that we have a token representation, let's try to generate some data to train our world model with. 
-
-We need a healthy mix of good and bad episodes. Good episodes teach the model what normal gameplay looks like (pipes moving, the bird flapping through gaps, etc). Bad episodes capture what happens near collisions, deaths, and respawns. 
+Okay, now that we have a token representation, let's try to generate some data to train our world model with. We need a healthy mix of good and bad episodes. Good episodes teach the model what normal gameplay looks like (pipes moving, the bird flapping through gaps, etc). Bad episodes capture what happens near collisions, deaths, and respawns. 
 
 For the good episodes, I trained a simple PPO policy in the [Flappy Bird Gym environment](https://github.com/markub3327/flappy-bird-gymnasium) to play it for me. It ended up being pretty decent: the mean score was ~21, median ~19, and a few runs reached the 90s. For the bad episodes, I made the policies worse on purpose: random actions, noisy PPO, doing nothing, playing normally for a bit and then giving up. In total, I collected 50k episodes, which became the training set. 
 
@@ -176,13 +174,19 @@ First, let’s try the most naive version (no KV cache, full recomputation every
     </div>
 </center>
 
-Unfortunately, neither backend gets us there with naive decoding. WASM looked promising, but the throughput drops off a cliff as the # of decodes increases (i.e. longer episodes will be an issue). So let’s try with a KV cache. We store parameters in $\texttt{float32}$, and we have 3 layers and our embedding size = 112. Thus, for each token, we can store both $K$ and $V$ in:
+Unfortunately, neither backend gets us there with naive decoding. WASM looked promising, but the throughput drops off a cliff as the # of decodes increases (i.e. longer episodes will be an issue). So let’s try with a KV cache. We store parameters in $\texttt{float32}$, we have 3 layers with embedding size = 112. Thus, for each token, we can store both $K$ and $V$ in:
 
 $$
 2 \cdot \left( 3 \times 112 \right) \cdot 4 \text{ bytes} \approx 2.69 \text{ KB}
 $$ 
 
-Our sequence length is $384$, so our max cache size will be $2.69 \text{ KB} \times 384 \approx 1.03 \text{ MB}$. This is small enough to store in the browser (as long as we make sure to chop off KV values as they become irrelevant).
+Our sequence length is $384$, so our max cache size will be:
+
+$$
+2.69 \text{ KB} \times 384 \approx 1.03 \text{ MB}
+$$ 
+
+This is small enough to store in the browser (as long as we make sure to chop off KV values as they become irrelevant).
 
 
 <center>
