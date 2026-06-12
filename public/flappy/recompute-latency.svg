@@ -1,0 +1,84 @@
+<svg width="980" height="560" viewBox="0 0 980 560" xmlns="http://www.w3.org/2000/svg" style="background-color:#FCF6F1">
+  <defs>
+    <style>
+      text {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        fill: #111111;
+      }
+      .title {
+        font-size: 30px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+      .tag {
+        font-size: 14px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      .axis-label {
+        font-size: 17px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      .tick {
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .value {
+        font-size: 14px;
+        font-weight: 800;
+      }
+      .grid {
+        stroke: rgba(17, 17, 17, 0.14);
+        stroke-width: 2;
+      }
+      .axis {
+        stroke: #111111;
+        stroke-width: 3;
+      }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="980" height="560" fill="#FCF6F1"/>
+
+  <text x="490" y="56" text-anchor="middle" class="title">RECOMPUTE LATENCY</text>
+
+  <rect x="338" y="80" width="20" height="18" fill="#FFD84D" stroke="#111111" stroke-width="2"/>
+  <rect x="534" y="80" width="20" height="18" fill="#63D471" stroke="#111111" stroke-width="2"/>
+  <text x="408" y="94" text-anchor="middle" class="tag">WASM</text>
+  <text x="611" y="94" text-anchor="middle" class="tag">WEBGPU</text>
+
+  <line x1="130" y1="140" x2="920" y2="140" class="grid"/>
+  <line x1="130" y1="204" x2="920" y2="204" class="grid"/>
+  <line x1="130" y1="268" x2="920" y2="268" class="grid"/>
+  <line x1="130" y1="332" x2="920" y2="332" class="grid"/>
+  <line x1="130" y1="396" x2="920" y2="396" class="grid"/>
+  <line x1="130" y1="460" x2="920" y2="460" class="axis"/>
+  <line x1="130" y1="140" x2="130" y2="460" class="axis"/>
+
+  <text x="116" y="145" text-anchor="end" class="tick">10k</text>
+  <text x="116" y="209" text-anchor="end" class="tick">8k</text>
+  <text x="116" y="273" text-anchor="end" class="tick">6k</text>
+  <text x="116" y="337" text-anchor="end" class="tick">4k</text>
+  <text x="116" y="401" text-anchor="end" class="tick">2k</text>
+  <text x="116" y="465" text-anchor="end" class="tick">0</text>
+
+  <rect x="179.66666666666663" y="459.952" width="72" height="0.047999999999999994" fill="#FFD84D" stroke="#111111" stroke-width="2"/>
+  <rect x="271.66666666666663" y="459.3552" width="72" height="0.6447999999999999" fill="#63D471" stroke="#111111" stroke-width="2"/>
+  <text x="215.66666666666663" y="447.952" text-anchor="middle" class="value">1.5</text>
+  <text x="307.66666666666663" y="447.3552" text-anchor="middle" class="value">20.15</text>
+  <text x="261.66666666666663" y="508" text-anchor="middle" class="tick">1</text>
+  <rect x="443" y="459.56" width="72" height="0.43999999999999995" fill="#FFD84D" stroke="#111111" stroke-width="2"/>
+  <rect x="535" y="454.7936" width="72" height="5.2064" fill="#63D471" stroke="#111111" stroke-width="2"/>
+  <text x="479" y="447.56" text-anchor="middle" class="value">13.75</text>
+  <text x="571" y="442.7936" text-anchor="middle" class="value">162.7</text>
+  <text x="525" y="508" text-anchor="middle" class="tick">10</text>
+  <rect x="706.3333333333333" y="313.392" width="72" height="146.608" fill="#FFD84D" stroke="#111111" stroke-width="2"/>
+  <rect x="798.3333333333333" y="222.0976" width="72" height="237.9024" fill="#63D471" stroke="#111111" stroke-width="2"/>
+  <text x="742.3333333333333" y="301.392" text-anchor="middle" class="value">4.58k</text>
+  <text x="834.3333333333333" y="210.0976" text-anchor="middle" class="value">7.43k</text>
+  <text x="788.3333333333333" y="508" text-anchor="middle" class="tick">384</text>
+
+  <text x="66" y="300" transform="rotate(-90 66 300)" text-anchor="middle" class="axis-label">LATENCY (MS)</text>
+  <text x="525" y="544" text-anchor="middle" class="axis-label"># DECODES</text>
+</svg>

@@ -1,0 +1,144 @@
+<svg style="max-height: 500px" xmlns="http://www.w3.org/2000/svg" viewBox="63.843648208469055 186.96 1232.7904451682953 533.52" width="1232.7904451682953" height="533.52">
+  <defs>
+    <style>
+      text {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        fill: #111111;
+      }
+      .title {
+        font-size: 34px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+      .panel-title {
+        font-size: 24px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+      .axis-label {
+        font-size: 18px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      .tick {
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .value {
+        font-size: 15px;
+        font-weight: 800;
+      }
+      .tag {
+        font-size: 16px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+    </style>
+  </defs>
+
+  <rect fill="#FCF6F1" height="760" width="1400" y="0" x="0"/>
+
+  <text class="panel-title" text-anchor="middle" y="232" x="377">HARD ONE-HOT TARGET</text>
+  <text class="panel-title" text-anchor="middle" y="232" x="1023">LOCAL SOFT TARGET</text>
+
+  <g opacity="0.9">
+    <line stroke-width="2" stroke="rgba(17,17,17,0.15)" y2="310" x2="630" y1="310" x1="164"/>
+    <line stroke-width="2" stroke="rgba(17,17,17,0.15)" y2="390" x2="630" y1="390" x1="164"/>
+    <line stroke-width="2" stroke="rgba(17,17,17,0.15)" y2="470" x2="630" y1="470" x1="164"/>
+    <line stroke-width="2" stroke="rgba(17,17,17,0.15)" y2="550" x2="630" y1="550" x1="164"/>
+    <line stroke-width="3" stroke="#111111" y2="630" x2="630" y1="630" x1="164"/>
+
+    <line stroke-width="2" stroke="rgba(17,17,17,0.15)" y2="310" x2="1276" y1="310" x1="810"/>
+    <line stroke-width="2" stroke="rgba(17,17,17,0.15)" y2="390" x2="1276" y1="390" x1="810"/>
+    <line stroke-width="2" stroke="rgba(17,17,17,0.15)" y2="470" x2="1276" y1="470" x1="810"/>
+    <line stroke-width="2" stroke="rgba(17,17,17,0.15)" y2="550" x2="1276" y1="550" x1="810"/>
+    <line stroke-width="3" stroke="#111111" y2="630" x2="1276" y1="630" x1="810"/>
+  </g>
+
+  <g class="tick">
+    <text text-anchor="end" y="315" x="152">1</text>
+    <text text-anchor="end" y="395" x="152">0.75</text>
+    <text text-anchor="end" y="475" x="152">0.50</text>
+    <text text-anchor="end" y="555" x="152">0.25</text>
+    <text text-anchor="end" y="635" x="152">0</text>
+
+    <text text-anchor="end" y="315" x="798">1</text>
+    <text text-anchor="end" y="395" x="798">0.75</text>
+    <text text-anchor="end" y="475" x="798">0.50</text>
+    <text text-anchor="end" y="555" x="798">0.25</text>
+    <text text-anchor="end" y="635" x="798">0</text>
+  </g>
+
+  <g>
+    <text class="axis-label" text-anchor="middle" transform="rotate(-90 92 470)" y="470" x="92">TARGET PROB</text>
+    <text class="axis-label" text-anchor="middle" transform="rotate(-90 738 470)" y="470" x="738">TARGET PROB</text>
+    <text class="axis-label" text-anchor="middle" y="704" x="397">HEIGHT BIN</text>
+    <text class="axis-label" text-anchor="middle" y="704" x="1043">HEIGHT BIN</text>
+  </g>
+
+  <g>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="0" width="30" y="630" x="176"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="0" width="30" y="630" x="216"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="0" width="30" y="630" x="256"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="0" width="30" y="630" x="296"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="0" width="30" y="630" x="336"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FFD84D" height="320" width="30" y="310" x="376"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="0" width="30" y="630" x="416"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="0" width="30" y="630" x="456"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="0" width="30" y="630" x="496"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="0" width="30" y="630" x="536"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="0" width="30" y="630" x="576"/>
+
+    <text class="value" text-anchor="middle" y="292" x="391">1.00</text>
+
+    <text class="tick" text-anchor="middle" y="660" x="191">0</text>
+    <text class="tick" text-anchor="middle" y="660" x="231">1</text>
+    <text class="tick" text-anchor="middle" y="660" x="271">2</text>
+    <text class="tick" text-anchor="middle" y="660" x="311">3</text>
+    <text class="tick" text-anchor="middle" y="660" x="351">4</text>
+    <text class="tick" text-anchor="middle" y="660" x="391">5</text>
+    <text class="tick" text-anchor="middle" y="660" x="431">6</text>
+    <text class="tick" text-anchor="middle" y="660" x="471">7</text>
+    <text class="tick" text-anchor="middle" y="660" x="511">8</text>
+    <text class="tick" text-anchor="middle" y="660" x="551">9</text>
+    <text class="tick" text-anchor="middle" y="660" x="591">10</text>
+  </g>
+
+  <g>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="5.76" width="30" y="624.24" x="822"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="17.28" width="30" y="612.72" x="862"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="46.32" width="30" y="583.68" x="902"/>
+    <rect stroke-width="2" stroke="#111111" fill="#63D471" height="105.92" width="30" y="524.08" x="942"/>
+    <rect stroke-width="2" stroke="#111111" fill="#63D471" height="194.88" width="30" y="435.12" x="982"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FFD84D" height="228.8" width="30" y="401.2" x="1022"/>
+    <rect stroke-width="2" stroke="#111111" fill="#63D471" height="194.88" width="30" y="435.12" x="1062"/>
+    <rect stroke-width="2" stroke="#111111" fill="#63D471" height="105.92" width="30" y="524.08" x="1102"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="46.32" width="30" y="583.68" x="1142"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="17.28" width="30" y="612.72" x="1182"/>
+    <rect stroke-width="2" stroke="#111111" fill="#FCF6F1" height="5.76" width="30" y="624.24" x="1222"/>
+
+    <text class="value" text-anchor="middle" y="612" x="837">0.02</text>
+    <text class="value" text-anchor="middle" y="600" x="877">0.05</text>
+    <text class="value" text-anchor="middle" y="571" x="917">0.14</text>
+    <text class="value" text-anchor="middle" y="512" x="957">0.33</text>
+    <text class="value" text-anchor="middle" y="423" x="997">0.61</text>
+    <text class="value" text-anchor="middle" y="389" x="1037">0.72</text>
+    <text class="value" text-anchor="middle" y="423" x="1077">0.61</text>
+    <text class="value" text-anchor="middle" y="512" x="1117">0.33</text>
+    <text class="value" text-anchor="middle" y="571" x="1157">0.14</text>
+    <text class="value" text-anchor="middle" y="600" x="1197">0.05</text>
+    <text class="value" text-anchor="middle" y="612" x="1237">0.02</text>
+
+    <text class="tick" text-anchor="middle" y="660" x="837">0</text>
+    <text class="tick" text-anchor="middle" y="660" x="877">1</text>
+    <text class="tick" text-anchor="middle" y="660" x="917">2</text>
+    <text class="tick" text-anchor="middle" y="660" x="957">3</text>
+    <text class="tick" text-anchor="middle" y="660" x="997">4</text>
+    <text class="tick" text-anchor="middle" y="660" x="1037">5</text>
+    <text class="tick" text-anchor="middle" y="660" x="1077">6</text>
+    <text class="tick" text-anchor="middle" y="660" x="1117">7</text>
+    <text class="tick" text-anchor="middle" y="660" x="1157">8</text>
+    <text class="tick" text-anchor="middle" y="660" x="1197">9</text>
+    <text class="tick" text-anchor="middle" y="660" x="1237">10</text>
+  </g>
+</svg>

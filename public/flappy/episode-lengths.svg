@@ -1,0 +1,104 @@
+<svg width="980" height="560" viewBox="0 0 980 560" xmlns="http://www.w3.org/2000/svg" style="background-color:#FCF6F1">
+  <defs>
+    <style>
+      text {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        fill: #111111;
+      }
+      .title {
+        font-size: 30px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+      .tag {
+        font-size: 14px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      .axis-label {
+        font-size: 17px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      .tick {
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .value {
+        font-size: 14px;
+        font-weight: 800;
+      }
+      .grid {
+        stroke: rgba(17, 17, 17, 0.14);
+        stroke-width: 2;
+      }
+      .axis {
+        stroke: #111111;
+        stroke-width: 3;
+      }
+      .bar {
+        stroke: #111111;
+        stroke-width: 2;
+      }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="980" height="560" fill="#FCF6F1"/>
+
+  <text x="490" y="56" text-anchor="middle" class="title">EPISODE LENGTHS</text>
+
+  <rect x="275" y="74" width="128" height="30" fill="#FCF6F1" stroke="#111111" stroke-width="2"/>
+  <rect x="425" y="74" width="128" height="30" fill="#FCF6F1" stroke="#111111" stroke-width="2"/>
+  <rect x="575" y="74" width="128" height="30" fill="#FCF6F1" stroke="#111111" stroke-width="2"/>
+  <text x="339" y="94" text-anchor="middle" class="tag">50K EPISODES</text>
+  <text x="489" y="94" text-anchor="middle" class="tag">MEDIAN 50</text>
+  <text x="639" y="94" text-anchor="middle" class="tag">MAX 3928</text>
+
+  <line x1="130" y1="140" x2="920" y2="140" class="grid"/>
+  <line x1="130" y1="204" x2="920" y2="204" class="grid"/>
+  <line x1="130" y1="268" x2="920" y2="268" class="grid"/>
+  <line x1="130" y1="332" x2="920" y2="332" class="grid"/>
+  <line x1="130" y1="396" x2="920" y2="396" class="grid"/>
+  <line x1="130" y1="460" x2="920" y2="460" class="axis"/>
+  <line x1="130" y1="140" x2="130" y2="460" class="axis"/>
+
+  <text x="116" y="145" text-anchor="end" class="tick">25k</text>
+  <text x="116" y="209" text-anchor="end" class="tick">20k</text>
+  <text x="116" y="273" text-anchor="end" class="tick">15k</text>
+  <text x="116" y="337" text-anchor="end" class="tick">10k</text>
+  <text x="116" y="401" text-anchor="end" class="tick">5k</text>
+  <text x="116" y="465" text-anchor="end" class="tick">0</text>
+
+  <text x="66" y="300" transform="rotate(-90 66 300)" text-anchor="middle" class="axis-label">EPISODE COUNT</text>
+  <text x="525" y="525" text-anchor="middle" class="axis-label">EPISODE LENGTH BIN</text>
+
+  <rect x="150" y="312" width="64" height="148" fill="#63D471" class="bar"/>
+  <rect x="238" y="151" width="64" height="309" fill="#FFD84D" class="bar"/>
+  <rect x="326" y="448" width="64" height="12" fill="#FCF6F1" class="bar"/>
+  <rect x="414" y="454" width="64" height="6" fill="#FCF6F1" class="bar"/>
+  <rect x="502" y="449" width="64" height="11" fill="#FCF6F1" class="bar"/>
+  <rect x="590" y="437" width="64" height="23" fill="#FCF6F1" class="bar"/>
+  <rect x="678" y="408" width="64" height="52" fill="#FCF6F1" class="bar"/>
+  <rect x="766" y="411" width="64" height="49" fill="#FCF6F1" class="bar"/>
+  <rect x="854" y="455" width="64" height="5" fill="#FCF6F1" class="bar"/>
+
+  <text x="182" y="300" text-anchor="middle" class="value">12.0k</text>
+  <text x="270" y="139" text-anchor="middle" class="value">25.1k</text>
+  <text x="358" y="436" text-anchor="middle" class="value">1.0k</text>
+  <text x="446" y="442" text-anchor="middle" class="value">515</text>
+  <text x="534" y="437" text-anchor="middle" class="value">885</text>
+  <text x="622" y="425" text-anchor="middle" class="value">1.8k</text>
+  <text x="710" y="396" text-anchor="middle" class="value">4.3k</text>
+  <text x="798" y="399" text-anchor="middle" class="value">4.0k</text>
+  <text x="886" y="443" text-anchor="middle" class="value">370</text>
+
+  <text x="182" y="483" text-anchor="middle" class="tick">31-49</text>
+  <text x="270" y="483" text-anchor="middle" class="tick">50-74</text>
+  <text x="358" y="483" text-anchor="middle" class="tick">75-99</text>
+  <text x="446" y="483" text-anchor="middle" class="tick">100-149</text>
+  <text x="534" y="483" text-anchor="middle" class="tick">150-249</text>
+  <text x="622" y="483" text-anchor="middle" class="tick">250-499</text>
+  <text x="710" y="483" text-anchor="middle" class="tick">500-999</text>
+  <text x="798" y="483" text-anchor="middle" class="tick">1k-2k</text>
+  <text x="886" y="483" text-anchor="middle" class="tick">2k-4k</text>
+</svg>

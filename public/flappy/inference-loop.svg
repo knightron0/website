@@ -1,0 +1,59 @@
+<svg style="max-height: 500px" xmlns="http://www.w3.org/2000/svg" viewBox="91.83999999999999 77.28 803.04 412.15999999999997" width="803.04" height="412.15999999999997">
+  <defs>
+    <style>
+      text {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        fill: #111111;
+      }
+      .node-title {
+        font-size: 27px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+      .node-copy {
+        font-size: 19px;
+        font-weight: 700;
+      }
+      .arrow-copy {
+        font-size: 15px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+    </style>
+    <marker markerUnits="userSpaceOnUse" orient="auto" refY="4" refX="7" markerHeight="8" markerWidth="8" id="arrowhead">
+      <path fill="#111111" d="M0 0L8 4L0 8Z"/>
+    </marker>
+  </defs>
+
+  <rect fill="#FCF6F1" height="560" width="980" y="0" x="0"/>
+
+  <rect fill="#111111" height="112" width="252" y="97" x="113"/>
+  <rect fill="#111111" height="112" width="252" y="97" x="625"/>
+  <rect fill="#111111" height="112" width="252" y="361" x="625"/>
+  <rect fill="#111111" height="112" width="252" y="361" x="113"/>
+
+  <rect stroke-width="4" stroke="#111111" fill="#FFD84D" height="112" width="252" y="92" x="108"/>
+  <rect stroke-width="4" stroke="#111111" fill="#63D471" height="112" width="252" y="92" x="620"/>
+  <rect stroke-width="4" stroke="#111111" fill="#FCF6F1" height="112" width="252" y="356" x="620"/>
+  <rect stroke-width="4" stroke="#111111" fill="#FCF6F1" height="112" width="252" y="356" x="108"/>
+
+  <text class="node-title" text-anchor="middle" y="140" x="234">READ ACTION</text>
+  <text class="node-copy" text-anchor="middle" y="179" x="234">flap / idle</text>
+
+  <text class="node-title" text-anchor="middle" y="140" x="746">GENERATE</text>
+  <text class="node-copy" text-anchor="middle" y="179" x="746">next frame tokens</text>
+
+  <text class="node-title" text-anchor="middle" y="404" x="746">DRAW</text>
+  <text class="node-copy" text-anchor="middle" y="443" x="746">pipe + bird</text>
+
+  <text class="node-title" text-anchor="middle" y="404" x="234">UPDATE</text>
+  <text class="node-copy" text-anchor="middle" y="443" x="234">the context</text>
+
+  <line marker-end="url(#arrowhead)" stroke-width="3" stroke="#111111" y2="148" x2="617" y1="148" x1="360"/>
+
+  <line marker-end="url(#arrowhead)" stroke-width="3" stroke="#111111" y2="352" x2="746" y1="204" x1="746"/>
+
+  <line marker-end="url(#arrowhead)" stroke-width="3" stroke="#111111" y2="412" x2="363" y1="412" x1="620"/>
+
+  <line marker-end="url(#arrowhead)" stroke-width="3" stroke="#111111" y2="208" x2="234" y1="356" x1="234"/>
+</svg>

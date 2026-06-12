@@ -1,0 +1,80 @@
+<svg style="max-height: 500px" xmlns="http://www.w3.org/2000/svg" viewBox="62.72 63.84 864.6400000000001 445.76000000000005" width="864.6400000000001" height="445.76000000000005">
+  <defs>
+    <style>
+      text {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        fill: #111111;
+      }
+      .lane-title {
+        font-size: 30px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+      .lane-tag {
+        font-size: 16px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      .node-title {
+        font-size: 24px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+      .node-copy {
+        font-size: 19px;
+        font-weight: 700;
+      }
+      .arrow-copy {
+        font-size: 15px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+    </style>
+    <marker markerUnits="userSpaceOnUse" orient="auto" refY="4" refX="7" markerHeight="8" markerWidth="8" id="arrowhead">
+      <path fill="#111111" d="M0 0L8 4L0 8Z"/>
+    </marker>
+  </defs>
+
+  <rect fill="#FCF6F1" height="560" width="980" y="0" x="0"/>
+
+  <rect fill="#111111" height="404" width="354" y="84" x="84"/>
+  <rect fill="#111111" height="404" width="354" y="84" x="554"/>
+  <rect stroke-width="4" stroke="#111111" fill="#FCF6F1" height="404" width="354" y="78" x="78"/>
+  <rect stroke-width="4" stroke="#111111" fill="#FCF6F1" height="404" width="354" y="78" x="548"/>
+
+  <text class="lane-title" text-anchor="middle" y="126" x="255">MAIN THREAD</text>
+  <text class="lane-tag" text-anchor="middle" y="152" x="255">BROWSER LOOP</text>
+  <text class="lane-title" text-anchor="middle" y="126" x="725">WEB WORKER</text>
+  <text class="lane-tag" text-anchor="middle" y="152" x="725">MODEL LOOP</text>
+
+  <rect fill="#111111" height="76" width="266" y="201" x="127"/>
+  <rect fill="#111111" height="76" width="266" y="309" x="127"/>
+  <rect fill="#111111" height="76" width="266" y="417" x="127"/>
+  <rect stroke-width="4" stroke="#111111" fill="#FFD84D" height="76" width="266" y="196" x="122"/>
+  <rect stroke-width="4" stroke="#111111" fill="#FCF6F1" height="76" width="266" y="304" x="122"/>
+  <rect stroke-width="4" stroke="#111111" fill="#FCF6F1" height="76" width="266" y="412" x="122"/>
+
+  <text class="node-title" text-anchor="middle" y="228" x="255">READ INPUT</text>
+  <text class="node-copy" text-anchor="middle" y="251" x="255">flap / idle</text>
+  <text class="node-title" text-anchor="middle" y="336" x="255">QUEUE STEP</text>
+  <text class="node-title" text-anchor="middle" y="444" x="255">RENDER</text>
+
+  <rect fill="#111111" height="76" width="266" y="201" x="597"/>
+  <rect fill="#111111" height="76" width="266" y="309" x="597"/>
+  <rect fill="#111111" height="76" width="266" y="417" x="597"/>
+  <rect stroke-width="4" stroke="#111111" fill="#63D471" height="76" width="266" y="196" x="592"/>
+  <rect stroke-width="4" stroke="#111111" fill="#63D471" height="76" width="266" y="304" x="592"/>
+  <rect stroke-width="4" stroke="#111111" fill="#FCF6F1" height="76" width="266" y="412" x="592"/>
+
+  <text class="node-title" text-anchor="middle" y="228" x="725">APPEND ACTION</text>
+  <text class="node-copy" text-anchor="middle" y="251" x="725">1 token</text>
+  <text class="node-title" text-anchor="middle" y="336" x="725">DECODE</text>
+  <text class="node-copy" text-anchor="middle" y="359" x="725">update KV cache</text>
+  <text class="node-title" text-anchor="middle" y="444" x="725">EMIT STATE</text>
+
+  <line marker-end="url(#arrowhead)" stroke-width="3" stroke="#111111" y2="342" x2="585" y1="342" x1="388"/>
+  <text class="arrow-copy" text-anchor="middle" y="332" x="488">ACTION</text>
+
+  <line marker-end="url(#arrowhead)" stroke-width="3" stroke="#111111" y2="450" x2="395" y1="450" x1="592"/>
+  <text class="arrow-copy" text-anchor="middle" y="440" x="492">NEXT STATE</text>
+</svg>
