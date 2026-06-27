@@ -91,6 +91,38 @@ html {
   @apply m-0;
 }
 
+.prose .media-frame {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  border: 1px solid #DED5CA;
+  border-radius: 5px;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+}
+
+.prose .media-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.prose .media-frame.narrow {
+  width: 80%;
+}
+
+.prose .media-frame.narrower {
+  width: 40%;
+}
+
+.prose .media-caption {
+  font-style: italic;
+  color: #6f675f;
+  font-size: 0.85rem;
+}
+
 .prose video {
   filter: brightness(0.85);
   border: 1px solid #e5e5e5;

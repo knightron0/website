@@ -1,0 +1,103 @@
+---
+title: 'Fingerprinting Optimizers'
+publishedAt: '2026-06-20'
+summary: ''
+---
+
+**TL;DR**: I made a [small artifact](https://www.optimizers.space/) to look at what optimizers actually do to updates during training. It logs a bunch of update geometry metrics over [nanoGPT training runs](https://github.com/KellerJordan/modded-nanogpt/tree/master/records/track_3_optimization), then lets you poke through them by optimizer, layer, and time.
+
+<figure className="media-frame">
+  <img src="/fingerprints/demo.gif" alt="Optimizer fingerprint dashboard demo" />
+</figure>
+
+---
+
+
+As part of my goal to deepen my intuition for each layer of the AI stack, I messed around with nanoGPT and Muon a [few months back](https://www.sarthakmangla.com/blog/bam) with [Abel Gurung](https://abelgurung.github.io/). I revisited that thread after seeing some of the recent discourse around [Shampoo vs Muon](https://x.com/kellerjordan0/status/2064761560732713360?s=20) -- I was especially curious to see the different kinds of _update_ geometry induced by different optimizers.
+
+I decided to do this audit on top of [track 3](https://github.com/KellerJordan/modded-nanogpt/tree/master/records/track_3_optimization) of the [modded-GPT](https://github.com/kellerjordan/modded-nanogpt) challenge. More specifically -- for each parameter during nanoGPT training, I recorded the parameter + gradient before the optimizer step and the parameter after the step. This let me extract the **update**:
+
+$$
+\Delta \theta_t = \theta_{t+1} - \theta_t
+$$
+
+It is worth noting that this isn't the *pure* update. It still folds in momentum, learning rate, weight decay, etc. I wasn't able to find a generalizable way to isolate just the preconditioning effect (Claude and Codex couldn't either). Most speedrun submissions tune those hyperparameters per-run anyway, so I think it's fine to eat that variable for now. Now that we have the effective update $\Delta \theta_t$, let's try tracking a few rough diagnostics on it!
+
+
+----
+
+Firstly, we can simply track gradient norm $G = \|g\|_2$ and weight norm $W = \|\theta\|_2$ for scale context. If one run has much larger weights or gradients, I'd want to know that before reading too much into anything else. 
+
+A nice example is [MuonH](https://github.com/KellerJordan/modded-nanogpt/tree/master/records/track_3_optimization/results/20260430_muonh) vs [ContraMuon](https://github.com/KellerJordan/modded-nanogpt/tree/master/records/track_3_optimization/results/20260501_contra_muon): MuonH keeps hidden matrix weights on a fixed Frobenius radius by projecting after each step, so $W$ stays basically constant. Contra Muon does not constrain the weight radius; instead it floors the relative update size, roughly $\frac{|u_t|_F}{| \theta_t|_F} \ge 0.35$. So in that run, $W$ can grow dramatically while $G$ actually falls, because the optimizer controlls the update scale.
+
+<center>
+  <figure className="media-frame narrow">
+    <img src="/fingerprints/norm.png" alt="Gradient and Weight norms"/>
+  </figure>
+  <figcaption className="media-caption">MuonH (purple) and ContraMuon (red)</figcaption>
+</center>
+
+We can also track relative **direction**, i.e. if the update is close to the negative descent direction. For this, we can compute the cosine similarity between the raw gradient and the update:
+
+$$
+A = \frac{\Delta\theta}{\|\Delta\theta\|_2} \cdot  \frac{(-g)}{\|g\|_2}
+$$
+
+A nice example for direction is [AdamW](https://github.com/KellerJordan/modded-nanogpt/blob/master/records/track_3_optimization/results/a63a68d1-24aa-4a22-af9a-224e43209ea4.txt) vs [SOAPH](https://github.com/KellerJordan/modded-nanogpt/tree/master/records/track_3_optimization/results/20260518_soaph):
+
+<center>
+  <figure className="media-frame narrower">
+    <img src="/fingerprints/alignment.png" alt="Gradient Alignment" />
+  </figure>
+  <figcaption className="media-caption">AdamW (turquoise?) and SOAPH (magenta)</figcaption>
+</center>
+
+AdamW is mostly a per-coordinate rescaling of the gradient plus momentum/decay, so its update tends to stay relatively aligned with the raw negative gradient. SOAPH is much less aligned, which is expected because SOAP/Shampoo-style methods precondition the matrix update and can rotate it _substantially_ before stepping.
+
+We can also ask whether the optimizer is doing something **Adam-like** coordinatewise. Adam rescales each coordinate by its historical gradient RMS, damping high-RMS ones relative to low-RMS ones. To check if this is showing up in the effective update, we track the correlation between the log RMS and the log step-to-gradient ratio:
+
+$$
+C = \mathrm{corr}\!\left(\log\sqrt{v_t},\, \log\left|\frac{\Delta\theta}{g}\right|\right), \qquad v_t = 0.9v_{t-1} + 0.1g_t^2
+$$
+
+$C > 0$ means high-RMS coordinates are getting *favored*; $C < 0$ means they're being suppressed, which is the Adam-like behavior. A representative example here is [AdamW](https://github.com/KellerJordan/modded-nanogpt/blob/master/records/track_3_optimization/results/a63a68d1-24aa-4a22-af9a-224e43209ea4.txt) vs [Shampoo](https://github.com/KellerJordan/modded-nanogpt/tree/master/records/track_3_optimization/results/20260513_shampoo_1_4_power):
+
+<center>
+  <figure className="media-frame narrower">
+    <img src="/fingerprints/rms_step.png" alt="RMS Adaptivity" />
+  </figure>
+  <figcaption className="media-caption">AdamW (turquoise?) and Shampoo (red)</figcaption>
+</center>
+
+AdamW should be the boring reference case for this metric (this is directly aligned to its update) Shampoo is different. It is still an adaptive optimizer, but its preconditioner is matrix-shaped rather than coordinate-shaped. The suppression is still visible, but weaker:
+
+Finally, since a lot of the recent discourse is about matrix structure -- Muon, Shampoo, orthogonalized updates -- we can look at the geometry of the update matrix directly. **Normalized stable rank** asks whether the update energy is spread across many singular directions or dominated by a few:
+
+$$
+R_s = \frac{\sum_i s_i^2}{s_1^2 \min(m,n)}
+$$
+
+Stable rank is a softer version of raw rank that weights directions by how much energy they carry, which conveys a much more meaningful picture of how spread out the update actually is. Values close to 1 mean energy is spread evenly; lower values mean a handful of directions dominate.
+
+**Orthogonality error** checks how close the update is to a scaled orthogonal matrix:
+
+$$
+E = \frac{\|M - \alpha I\|_F}{\alpha\sqrt{d}}, \qquad M = \Delta\theta^\top \Delta\theta, \quad \alpha = \mathrm{tr}(M)/d
+$$
+
+
+
+For example -- [AdamH’s](https://github.com/KellerJordan/modded-nanogpt/blob/master/records/track_3_optimization/results/20260430_adamh/7533dd87-107f-4a4f-8229-acbec0fb00ac.txt) QKV updates have low normalized stable rank and high orthogonality error, so most of the update energy is concentrated in a few singular directions. [Muon](https://github.com/KellerJordan/modded-nanogpt/blob/master/records/track_3_optimization/results/7b8270c5-a9cd-4a73-b7d8-5d86a2d1e428.txt) looks completely different (as expected):
+
+<center>
+  <figure className="media-frame narrow">
+    <img src="/fingerprints/stable_rank.png" alt="Stable Rank + Orthogonality" />
+  </figure>
+  <figcaption className="media-caption">AdamH (orange) and Muon (red)</figcaption>
+</center>
+
+---
+
+I don’t think any one of these metrics explains why an optimizer works, and this is definitely not a clean isolation of preconditioning. But even through all the messiness, the update fingerprints seem to have fairly informative variation! Mostly, this helped me build better intuition for what these optimizers do during training -- hopefully it does the same for you.
+
+You can play with the data [here](https://www.optimizers.space/), and if you have ideas for new metrics or features, [PRs are very welcome](https://github.com/knightron0/optimizer-fingerprints) :)
