@@ -17,11 +17,11 @@ export default function Page() {
     <>
       <section className='mb-10'>
         <div className="text-2xl md:text-3xl font-semibold pb-5" style={{ fontFamily: cormorantGaramond.style.fontFamily }}>Sarthak Mangla</div>
-        <p>I recently wrapped up four awesome years at Purdue. This fall, I'll be starting my MSCS at Stanford.</p>
+        <p>I recently wrapped up four awesome years at Purdue. I'm currently helping make large-scale serving performant at <Link href="https://www.cartesia.ai/">Cartesia</Link>. This fall, I'll be starting my MSCS at Stanford.</p>
         <br />
         <p>I'm broadly interested in improving compute and data efficiency across the AI stack. My immediate goal is to build intuition for each layer so I can contribute meaningfully to both. </p>
         <br />
-        <p>So far, this has included large-scale serving infrastructure at <Link href="https://cartesia.ai">Cartesia AI</Link>, GPU benchmarking work at <Link href="https://tensara.org">Tensara</Link>, research on <Link href="https://sarthakmangla.com/blog/bam/">optimizer dynamics</Link>, and self-supervised representation learning for healthcare at the <Link href="https://engineering.purdue.edu/cvirl">CVIRL</Link> and <Link href="https://engineering.purdue.edu/HeinzLab/people">Heinz</Link> labs.</p>
+        <p>So far, this has included GPU benchmarking work at <Link href="https://tensara.org">Tensara</Link>, research on <Link href="https://sarthakmangla.com/blog/bam/">optimizer dynamics</Link>, and self-supervised representation learning for healthcare at the <Link href="https://engineering.purdue.edu/cvirl">CVIRL</Link> and <Link href="https://engineering.purdue.edu/HeinzLab/people">Heinz</Link> labs.</p>
         <br />
         <p>Some of my past work includes <Link href="https://boilerclasses.com/">BoilerClasses</Link>, <Link href="https://github.com/Divide-By-0/whatdidyoudo">What Did You Do</Link>, <Link href="https://twitter.com/msarthak29/status/1749267405656687076">Pulse</Link>, <Link href="https://chromewebstore.google.com/detail/tempus/bpdhbpeecmmglmkjfmigehaebpndmceh">Tempus</Link>, and <Link href="https://www.producthunt.com/products/interview-checklist#interview-checklist">Interview Checklist</Link>. Even before that, I was really into  <Link href="https://www.iarcs.org.in/inoi/2022/inoi2022/results_inoi2022.php#gold">competitive programming</Link> and <Link href="https://ioling.org/participants/IND">linguistics</Link>. </p>
         <br />
