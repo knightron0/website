@@ -1,0 +1,127 @@
+---
+title: 'Activation-aware Weight Quantization'
+publishedAt: '2026-07-13'
+summary: ''
+---
+
+This is a different type of blog post from what I've done before, but it's part of a new thing I'm trying this summer. I'll pick a paper and try to reproduce its core result through a small experiment. I'd like to do this with no AI coding, at least for the core algorithmic parts.
+
+For this post, I want to recreate the core idea and result from [AWQ](https://arxiv.org/pdf/2306.00978). The first step is to actually define what outcome we expect to see in our mini-experiment. Let's say we want to replicate a simplified, smaller version of Table 3 from the paper.
+<center>
+  <img src="/awq/reference_table.png" alt="Table 3" width="50%" />
+</center>
+
+
+Let's focus only on AWQ and RTN (with the FP16 baseline). Additionally, I want to run this on my Mac -- so let's pick a more modest model scaling series: [Pythia with 14M, 31M, and 70M](https://github.com/EleutherAI/pythia). So, we should have a 3x3 grid of 9 perplexity numbers by the end of this post. 
+
+---
+
+For a baseline, we can start with running the model in default FP16 to measure perplexity, which will be our primary metric. 
+
+The full [WikiText-2 test set](https://huggingface.co/datasets/mindchain/wikitext2) is longer than the model context window, so I split it into chunks of 512 tokens and average the loss across chunks. Since FP16, RTN, and AWQ all use the exact same evaluator, this is fine for comparing the methods for the purposes of this post!
+
+---
+
+Next is the naive quantization baseline: RTN, or round-to-nearest. For every `nn.Linear` weight matrix, I split the weights into groups of 128 values along the input-channel dimension. Each group gets its own scale and zero point. For 4-bit quantization, the integer range is $0, 1, \dots, 15$, so for a group of weights $\mathbf{w}$, I compute:
+
+$$
+\text{scale} = \frac{\max(\mathbf{w}) - \min(\mathbf{w})}{15}
+$$
+
+$$
+z = \text{round}(-\min(\mathbf{w}) / \text{scale})
+$$
+
+Then quantize:
+
+$$
+  q = \text{clamp}(\text{round}(\mathbf{w}/\text{scale}) + z, 0, 15)
+$$
+
+Since I'm slightly lazy to handle `int4` packed values + write custom kernels for the same, we can just do "fake quantization" for now. This means we can dequantize the values:
+
+$$
+\hat{\mathbf{w}} = (q - z)\text{scale}
+$$
+
+and store these in our FP16 weights. This simulates the quantization error without actually handling any low-precision kernels (and obviously we don't get a speed benefit here).
+
+---
+
+For the actual AWQ part, I found it easiest to think about the whole thing as a layer-wise function approximation problem. AWQ wants to rescale the input channels _individually_ before quantizing. To choose _how_ to rescale, we want to quantify how well a given rescaling config performs, then work backwards from there:
+$$
+\min_{\mathbf{s}} \left\| Q(\mathbf{W}\mathbf{s})(\mathbf{X}/\mathbf{s}) - \mathbf{W}\mathbf{X} \right\|
+$$
+
+Let $\mathbf{X}$ be the input activations to some layer, and let $\mathbf{W}$ be the weight for that layer (I’ll write the layer output as $\mathbf{W}\mathbf{X}$). The scale vector $\mathbf{s}$ has one value _per_ input channel. The trick is that we can insert $\mathbf{s}$ without changing the unquantized layer:
+
+$$
+\mathbf{W}\mathbf{X} = (\mathbf{W}\mathbf{s})(\mathbf{X}/\mathbf{s})
+$$
+
+Without quantization, the rewrite is useless as the scale gets canceled out. But once the scaled weights are quantized, the choice of $\mathbf{s}$ starts to matter!
+
+$$
+Q(\mathbf{W}\mathbf{s})(\mathbf{X}/\mathbf{s})
+$$
+
+Different scale vectors change what the weights look like before quantization, which changes how much information survives. Of course, one activation tensor $\mathbf{X}$ is not enough. I collect a small calibration set through the model and cache the input activations for every linear layer. If those cached activations are $\{\mathbf{X}_k\}_{k=1}^n$, then the objective becomes:
+
+$$
+\mathbf{s}^\star = \arg\min_{\mathbf{s}} \frac{1}{n} \sum_{k=1}^{n} \left\| Q(\mathbf{W}\mathbf{s})(\mathbf{X}_k/\mathbf{s}) - \mathbf{W}\mathbf{X}_k \right\|_2^2
+$$
+
+There is one more detail from the paper that makes this search computationaly feasible to carry out. I am not searching over _every_ possible value of $\mathbf{s}$.  Instead, I first compute a base activation scale for each input channel:
+
+$$
+\mathbf{s}_X[j] = \text{mean}(|\mathbf{X}[j]|)
+$$
+
+Then I search over:
+
+$$
+\mathbf{s} = \mathbf{s}_X^\alpha
+$$
+
+where $\alpha$ is a single scalar. In my implementation, I just try a small grid of $\alpha$ values between 0 and 1 (step = 0.05) for each layer. When $\alpha = 0$, every scale is 1, so this collapses back to normal RTN. As $\alpha$ gets larger, channels with larger activations get protected more aggressively.
+
+In code, this maps pretty cleanly to four pieces:
+
+1. A calibration collection function. I add forward pre-hooks to each `nn.Linear` layer and cache the input activations to
+  that layer.
+2. A reconstruction loss function. Given a layer name and a candidate scale vector, compute how close the quantized scaled layer is to the original layer.
+3. A base scale function. For each layer, compute `mean(abs(X))` per input channel.
+4. A grid search function. Try different $\alpha$ values for each layer and keep the best scale.
+
+I follow the pattern from RTN here (not doing real int4 inference). That is, the function $Q$ first quantizes via RTN, then dequantizes the same way, simulating the error. So after I find the appropriate AWQ scale for a layer, I fold it into the weight:
+$$
+  \mathbf{W}_{\text{AWQ}} = Q(\mathbf{W}\mathbf{s}) / \mathbf{s}
+$$
+
+Then I replace the original layer weight with $\mathbf{W}_{\text{AWQ}}$, and the normal model forward pass just works as is: 
+
+$$
+ \mathbf{W}_{\text{AWQ}}\mathbf{X} = (Q(\mathbf{W}\mathbf{s}) / \mathbf{s})\mathbf{X} =
+ Q(\mathbf{W}\mathbf{s})(\mathbf{X} / \mathbf{s})
+$$
+
+---
+
+Here's the final data: 
+
+$$
+\begin{array}{lccc}
+  \hline
+   & \text{Pythia-14M} & \text{Pythia-31M} & \text{Pythia-70M} \\
+  \hline
+  \text{FP16} & 138.53 & 81.14 & 63.32 \\
+  \hline
+  \text{AWQ}  & \textbf{243.45} & \textbf{114.45} & \textbf{79.99} \\
+  \text{RTN}  & 273.57 & 121.94 & 89.53 \\
+  \hline
+\end{array}
+$$
+
+This is roughly the pattern I was hoping to see. FP16 is still much better, which is expected, but AWQ consistently beats RTN across all three model sizes. The gap is especially noisy at this scale because these Pythia models are a couple OOMs smallers compared to the models in the paper. Atleast it beats RTN! 
+
+Code is all available [here](https://github.com/knightron0/awq). There's obviously a lot more things that can be done, but this was just a quick exercise to get me warmed up for this series of reproduction posts! 
