@@ -7,12 +7,8 @@ summary: ''
 This is a different type of blog post from what I've done before, but it's part of a new thing I'm trying this summer. I'll pick a paper and try to reproduce its core result through a small experiment. I'd like to do this with no AI coding, at least for the core algorithmic parts.
 
 For this post, I want to recreate the core idea and result from [AWQ](https://arxiv.org/pdf/2306.00978). The first step is to actually define what outcome we expect to see in our mini-experiment. Let's say we want to replicate a simplified, smaller version of Table 3 from the paper.
-<center>
-  <img src="/awq/reference_table.png" alt="Table 3" width="50%" />
-</center>
 
-
-Let's focus only on AWQ and RTN (with the FP16 baseline). Additionally, I want to run this on my Mac -- so let's pick a more modest model scaling series: [Pythia with 14M, 31M, and 70M](https://github.com/EleutherAI/pythia). So, we should have a 3x3 grid of 9 perplexity numbers by the end of this post. 
+I want to focus only on AWQ and RTN (with an FP16 baseline) and run all experiments on my Mac -- so let's pick a more modest model scaling series: [Pythia with 14M, 31M, and 70M](https://github.com/EleutherAI/pythia) params is pretty perfect. We should have a 3x3 grid of 9 perplexity numbers by the end of this post. 
 
 ---
 
@@ -109,18 +105,9 @@ $$
 
 Here's the final data: 
 
-$$
-\begin{array}{lccc}
-  \hline
-   & \text{Pythia-14M} & \text{Pythia-31M} & \text{Pythia-70M} \\
-  \hline
-  \text{FP16} & 138.53 & 81.14 & 63.32 \\
-  \hline
-  \text{AWQ}  & \textbf{243.45} & \textbf{114.45} & \textbf{79.99} \\
-  \text{RTN}  & 273.57 & 121.94 & 89.53 \\
-  \hline
-\end{array}
-$$
+<center>
+  <img src="/awq/results.png" width="80%" />
+</center>
 
 This is roughly the pattern I was hoping to see. FP16 is still much better, which is expected, but AWQ consistently beats RTN across all three model sizes. The gap is especially noisy at this scale because these Pythia models are a couple OOMs smallers compared to the models in the paper. Atleast it beats RTN! 
 
