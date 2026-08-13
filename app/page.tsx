@@ -17,7 +17,7 @@ export default function Page() {
     <>
       <section className='mb-10'>
         <div className="text-2xl md:text-3xl font-semibold pb-5" style={{ fontFamily: cormorantGaramond.style.fontFamily }}>Sarthak Mangla</div>
-        <p>I recently wrapped up four awesome years at Purdue. I'm currently helping make large-scale serving performant at <Link href="https://www.cartesia.ai/">Cartesia</Link>. This fall, I'll be starting my MSCS at Stanford.</p>
+        <p>I recently wrapped up <Link href="/blog/west-lafayette">four awesome years</Link> at Purdue. I'm currently helping make large-scale serving performant at <Link href="https://www.cartesia.ai/">Cartesia</Link>. This fall, I'll be starting my MSCS at Stanford.</p>
         <br />
         <p>I'm broadly interested in improving compute and data efficiency across the AI stack. My immediate goal is to build intuition for each layer so I can contribute meaningfully to both. </p>
         <br />
